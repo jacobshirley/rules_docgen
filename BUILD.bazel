@@ -1,7 +1,20 @@
 load("@bazel_gazelle//:def.bzl", "gazelle", "gazelle_binary")
+load("@buildifier_prebuilt//:rules.bzl", "buildifier")
 load("@package_metadata//licenses/rules:license.bzl", "license")
 load("@package_metadata//purl:purl.bzl", "purl")
 load("@package_metadata//rules:package_metadata.bzl", "package_metadata")
+
+buildifier(
+    name = "buildifier.fix",
+    exclude_patterns = ["./.git/*"],
+    lint_mode = "warn",
+    mode = "fix",
+)
+
+alias(
+    name = "format",
+    actual = ":buildifier.fix",
+)
 
 package_metadata(
     name = "package_metadata",
