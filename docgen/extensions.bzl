@@ -18,17 +18,9 @@ def _toolchain_extension(module_ctx):
     mkdocs = []
     for mod in module_ctx.modules:
         for toolchain in mod.tags.mkdocs:
-            print(toolchain.mkdocs_version)
             mkdocs.append(toolchain.mkdocs_version)
 
     return module_ctx.extension_metadata(
-        # Return True if the behavior of the module extension is fully
-        # determined by its inputs. Return False if the module depends on
-        # outside state, for example, if it needs to fetch an external list
-        # of versions, URLs, or hashes that could change.
-        #
-        # If True, Bazel omits information from the lock file, expecting that
-        # it can be reproduced.
         reproducible = True,
     )
 

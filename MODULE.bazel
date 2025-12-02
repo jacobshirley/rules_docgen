@@ -33,7 +33,7 @@ module(
 bazel_dep(name = "bazel_skylib", version = "1.8.2")
 bazel_dep(name = "package_metadata", version = "0.0.6")
 bazel_dep(name = "platforms", version = "1.0.0")
-bazel_dep(name = "bazel_lib", version = "3.0.0")
+bazel_dep(name = "bazel_lib", version = "3.0.1")
 bazel_dep(name = "rules_python", version = "1.7.0")
 bazel_dep(name = "aspect_rules_py", version = "1.6.6")
 
