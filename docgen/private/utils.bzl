@@ -1,3 +1,5 @@
+load("@bazel_lib//lib:copy_to_directory.bzl", "copy_to_directory_bin_action")
+
 UNIQUE_FOLDER_NAME = "_bazel_docs"
 
 def collect_inputs(ctx, root = ""):

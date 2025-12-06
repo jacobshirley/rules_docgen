@@ -1,3 +1,4 @@
+load(":providers.bzl", "DocsProviderInfo")
 
 def _mkdocs_config_impl(ctx):
     docs = ctx.attr.docs[DocsProviderInfo]

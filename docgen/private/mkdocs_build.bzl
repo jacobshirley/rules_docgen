@@ -1,7 +1,7 @@
 load(":utils.bzl", "collect_inputs")
 
 def _mkdocs_build_impl(ctx):
-    mkdocs_bin = ctx.executable._mkdocs_executable
+    mkdocs_bin = ctx.executable.mkdocs_executable
 
     docs_folder, config = collect_inputs(ctx, root = ctx.attr.root_nav_folder)
 
@@ -35,6 +35,12 @@ def _mkdocs_build_impl(ctx):
 mkdocs_build = rule(
     implementation = _mkdocs_build_impl,
     attrs = {
+        "mkdocs_executable": attr.label(
+            doc = "The mkdocs executable. Defaults to @mkdocs//:mkdocs from the docgen extension.",
+            executable = True,
+            cfg = "exec",
+            mandatory = True,
+        ),
         "docs": attr.label_list(
             doc = "The docs to include in the site",
             allow_files = True,
@@ -63,12 +69,6 @@ mkdocs_build = rule(
         "use_default_shell_env": attr.bool(
             doc = "Use the default shell environment",
             default = False,
-        ),
-        "_mkdocs_executable": attr.label(
-            doc = "The mkdocs executable",
-            executable = True,
-            cfg = "exec",
-            default = Label("//:mkdocs"),
         ),
     },
     toolchains = [

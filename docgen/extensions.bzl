@@ -10,15 +10,33 @@ names (the latest version will be picked for each name) and can register them as
 effectively overriding the default named toolchain due to toolchain resolution precedence.
 """
 
+load(":repositories.bzl", "mkdocs_repository")
+
 docgen_mkdocs = tag_class(attrs = {
-    "mkdocs_version": attr.string(doc = "Explicit version of mkdocs.", mandatory = False, default = "1.5.2"),
+    "name": attr.string(
+        doc = "The name of this mkdocs toolchain. Only used in the root module.",
+        mandatory = False,
+        default = "mkdocs",
+    ),
+    "pypi_hub": attr.label(doc = "Name of the pip repository hub that contains mkdocs", mandatory = False, default = "@default_pypi"),
+    "plugins": attr.string_list(doc = "List of mkdocs plugins to install", mandatory = False, default = []),
 })
 
 def _toolchain_extension(module_ctx):
-    mkdocs = []
+    # Collect all requirements across modules
     for mod in module_ctx.modules:
+        if (not mod.is_root):
+            continue
         for toolchain in mod.tags.mkdocs:
-            mkdocs.append(toolchain.mkdocs_version)
+            # Create mkdocs wrapper repository
+            mkdocs_repository(
+                name = mod.name or "mkdocs",
+                pypi_hub = toolchain.pypi_hub,
+                plugins = toolchain.plugins,
+            )
+            
+            # Only process the first mkdocs tag (they should all be the same in root module)
+            break
 
     return module_ctx.extension_metadata(
         reproducible = True,

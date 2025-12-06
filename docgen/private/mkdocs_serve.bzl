@@ -1,10 +1,10 @@
 load(":utils.bzl", "collect_inputs")
 
 def _mkdocs_serve_impl(ctx):
-    mkdocs_bin = ctx.executable._mkdocs_executable
+    mkdocs_bin = ctx.executable.mkdocs_executable
 
     transitive_runfiles = []
-    transitive_runfiles.append(ctx.attr._mkdocs_executable[DefaultInfo].default_runfiles)
+    transitive_runfiles.append(ctx.attr.mkdocs_executable[DefaultInfo].default_runfiles)
 
     docs_folder, config = collect_inputs(ctx, root = ctx.attr.root_nav_folder)
     serve_sh = ctx.actions.declare_file(ctx.label.name + ".sh")
@@ -22,7 +22,7 @@ def _mkdocs_serve_impl(ctx):
         is_executable = True,
     )
 
-    runfiles = ctx.runfiles(files = ctx.files._mkdocs_executable + inputs + ctx.attr._mkdocs_executable[DefaultInfo].files.to_list())
+    runfiles = ctx.runfiles(files = ctx.files.mkdocs_executable + inputs + ctx.attr.mkdocs_executable[DefaultInfo].files.to_list())
     runfiles = runfiles.merge_all(transitive_runfiles)
 
     return [
@@ -35,6 +35,12 @@ def _mkdocs_serve_impl(ctx):
 mkdocs_serve = rule(
     implementation = _mkdocs_serve_impl,
     attrs = {
+        "mkdocs_executable": attr.label(
+            doc = "The mkdocs executable. Defaults to @mkdocs//:mkdocs from the docgen extension.",
+            executable = True,
+            cfg = "exec",
+            mandatory = True,
+        ),
         "docs": attr.label_list(
             doc = "The docs to include in the site",
             allow_files = True,
@@ -59,12 +65,6 @@ mkdocs_serve = rule(
         "root_nav_folder": attr.string(
             doc = "The root nav folder",
             default = "",
-        ),
-        "_mkdocs_executable": attr.label(
-            doc = "The mkdocs executable",
-            executable = True,
-            cfg = "exec",
-            default = Label("//:mkdocs"),
         ),
     },
     toolchains = [

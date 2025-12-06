@@ -1,0 +1,38 @@
+"""Provides a simple way to test your rules as an external workspace.
+Add a basic smoke-test target below.
+"""
+
+load("@bazel_skylib//rules:build_test.bzl", "build_test")
+load("@jacobshirley_rules_docgen//docgen:defs.bzl", "docs")
+load("@mkdocs//:defs.bzl", "mkdocs_build", "mkdocs_config", "mkdocs_serve")
+
+docs(
+    name = "docs",
+)
+
+mkdocs_config(
+    name = "mkdocs_config",
+    docs = ":docs",
+    mkdocs_base = "mkdocs.tpl.yaml",
+)
+
+mkdocs_build(
+    name = "mkdocs",
+    config = ":mkdocs_config",
+    docs = [":docs"],
+    site_dir = "site",
+    visibility = ["//visibility:public"],
+)
+
+build_test(
+    name = "smoke_test",
+    size = "small",
+    targets = [":mkdocs"],
+)
+
+mkdocs_serve(
+    name = "mkdocs.serve",
+    config = ":mkdocs_config",
+    docs = [":docs"],
+    visibility = ["//visibility:public"],
+)
