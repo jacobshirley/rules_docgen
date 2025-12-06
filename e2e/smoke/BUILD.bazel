@@ -2,8 +2,8 @@
 Add a basic smoke-test target below.
 """
 
-load("@bazel_skylib//rules:build_test.bzl", "build_test")
 load("@jacobshirley_rules_docgen//docgen:defs.bzl", "docs")
+load("@bazel_skylib//rules:build_test.bzl", "build_test")
 load("@mkdocs//:defs.bzl", "mkdocs_build", "mkdocs_config", "mkdocs_serve")
 
 docs(
