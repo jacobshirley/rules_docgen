@@ -5,6 +5,7 @@ Add a basic smoke-test target below.
 load("@jacobshirley_rules_docgen//docgen:defs.bzl", "docs")
 load("@bazel_skylib//rules:build_test.bzl", "build_test")
 load("@mkdocs//:defs.bzl", "mkdocs_build", "mkdocs_config", "mkdocs_serve")
+load("@bazel_lib//lib:copy_directory.bzl", "copy_directory")
 
 docs(
     name = "docs",
@@ -34,5 +35,16 @@ mkdocs_serve(
     name = "mkdocs.serve",
     config = ":mkdocs_config",
     docs = [":docs"],
+    visibility = ["//visibility:public"],
+)
+
+genrule(
+    name = "git_last_updated_timestamps",
+    srcs = ["git-last-updated-timestamps.sh"] + glob(["git_test/**"]),
+    outs = ["git-timestamps.json"],
+    cmd = """
+cp -rL git_test .git
+./git-last-updated-timestamps.sh md > $@
+    """,
     visibility = ["//visibility:public"],
 )
