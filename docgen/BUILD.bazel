@@ -5,8 +5,6 @@ bzl_library(
     srcs = ["repositories.bzl"],
     visibility = ["//visibility:public"],
     deps = [
-        "//docgen/private:toolchains_repo",
-        "//docgen/private:versions",
         "@bazel_tools//tools/build_defs/repo:cache.bzl",
         "@bazel_tools//tools/build_defs/repo:http.bzl",
         "@bazel_tools//tools/build_defs/repo:utils.bzl",
@@ -17,6 +15,13 @@ bzl_library(
     name = "defs",
     srcs = ["defs.bzl"],
     visibility = ["//visibility:public"],
+    deps = [
+        "//docgen/private:docs",
+        "//docgen/private:docs_add_last_updated",
+        "//docgen/private:git_last_updated_timestamps",
+        "//docgen/private:mkdocs_build",
+        "//docgen/private:mkdocs_config",
+    ],
 )
 
 bzl_library(
