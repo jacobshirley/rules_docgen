@@ -20,8 +20,6 @@ _ATTRS = {
 def _mkdocs_repository_impl(repository_ctx):
     pypi_hub = repository_ctx.attr.pypi_hub.repo_name
 
-    print(pypi_hub)
-
     plugin_content = ""
     for plugin in repository_ctx.attr.plugins:
         plugin_content += '\n        "@@{pypi_hub}//'.format(
