@@ -1,1 +1,3 @@
 test --test_output=errors
+startup --windows_enable_symlinks
+build --enable_runfiles
