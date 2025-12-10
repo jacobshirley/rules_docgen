@@ -99,7 +99,7 @@ END {
 # Output result to file or stdout
 if [ -n "$OUTPUT_FILE" ]; then
 	echo "$RESULT" > "$OUTPUT_FILE"
-	echo "Timestamps written to $OUTPUT_FILE"
+	echo "Timestamps written to $OUTPUT_FILE" >&2
 else
 	echo "$RESULT"
 fi

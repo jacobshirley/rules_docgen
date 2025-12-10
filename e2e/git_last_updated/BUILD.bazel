@@ -11,6 +11,7 @@ docs(
 
 git_last_updated_timestamps(
     name = "git_last_updated_timestamps",
+    srcs = glob(["git_test/**"]),
     out = "last_updated.json",
     git_dir = "git_test",
     visibility = ["//visibility:public"],
