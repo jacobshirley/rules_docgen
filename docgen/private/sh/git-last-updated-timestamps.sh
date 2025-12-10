@@ -68,6 +68,8 @@ BEGIN {
 }
 /^DATE:/ {
     current_date = substr($0, 6)  # Remove "DATE:" prefix
+    # Normalize timezone format: replace +00:00 with Z for consistency across platforms
+    gsub(/\+00:00$/, "Z", current_date)
     next
 }
 /^[AMD]/ {
