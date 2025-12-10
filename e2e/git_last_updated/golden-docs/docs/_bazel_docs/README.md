@@ -1,4 +1,0 @@
-# Git Last Updated E2E Test
-
-This e2e test verifies that the `docs_add_last_updated` rule correctly adds "Last Updated" timestamps to documentation files based on Git history.
-\n\n---\nLast updated: December 06, 2025 at 11:36 PM\n

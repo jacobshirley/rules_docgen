@@ -34,17 +34,17 @@ function update_file {
     fi
 
     # Add last updated information to the footer
-    footer_line="---\n"
+    footer_line="---"
 
     # If update history URL is provided, add it to the footer
     update_history_url="{update_history_url}"
     if [ -n "$update_history_url" ] && [ "$has_update" = "true" ]; then
-        footer_line+="Last updated: [$last_update]({update_history_url}/$output_path)\n"
+        footer_line+="\nLast updated: [$last_update]({update_history_url}/$output_path)"
     else
-        footer_line+="Last updated: $last_update\n"
+        footer_line+="\nLast updated: $last_update"
     fi
 
-    echo "\n\n$footer_line" >> "{out_dir}/$output_path"
+    printf "%b\n" "$footer_line" >> "{out_dir}/$output_path"
 }
 
 for arg in "$@"; do
