@@ -85,6 +85,6 @@ docs_add_last_updated = rule(
     },
     toolchains = [
         "@bazel_lib//lib:coreutils_toolchain_type",
-        "@jq.bzl//jq/toolchain:type"
+        "@jq.bzl//jq/toolchain:type",
     ],
 )
