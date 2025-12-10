@@ -21,7 +21,7 @@ function update_file {
 
     # For JSON lookup, strip everything up to and including the unique folder name
     json_lookup_path=$(echo "$output_path" | sed 's|^.*{unique_folder_name}/||')
-    last_update_raw=$(jq -r --arg file "$json_lookup_path" '.[$file] // "Unknown"' "{json_file}")
+    last_update_raw=$({jq} -r --arg file "$json_lookup_path" '.[$file] // "Unknown"' "{json_file}")
 
     has_update="false"
     # Format the date if it's not "Unknown"

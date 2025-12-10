@@ -35,6 +35,7 @@ bazel_dep(name = "package_metadata", version = "0.0.6")
 bazel_dep(name = "platforms", version = "1.0.0")
 bazel_dep(name = "bazel_lib", version = "3.0.0")
 bazel_dep(name = "aspect_rules_py", version = "1.6.6")
+bazel_dep(name = "jq.bzl", version = "0.4.0")
 
 bazel_dep(name = "gazelle", version = "0.47.0", dev_dependency = True, repo_name = "bazel_gazelle")
 bazel_dep(name = "bazel_skylib_gazelle_plugin", version = "1.8.2", dev_dependency = True)

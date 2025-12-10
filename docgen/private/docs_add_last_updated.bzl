@@ -5,6 +5,8 @@ def _docs_add_last_updated_impl(ctx):
     out_folder = ctx.actions.declare_directory(ctx.attr.out_dir or ctx.label.name)
 
     coreutils_bin = ctx.toolchains["@bazel_lib//lib:coreutils_toolchain_type"].coreutils_info.bin
+    jq_bin = ctx.toolchains["@jq.bzl//jq/toolchain:type"].jqinfo.bin
+
     date_format = ctx.attr.last_updated_date_format
     if not date_format:
         date_format = "+%B %d, %Y at %I:%M %p"
@@ -23,15 +25,16 @@ def _docs_add_last_updated_impl(ctx):
             "{json_file}": ctx.file.last_updated_json.path,
             "{date_format}": date_format,
             "{update_history_url}": update_history_url if update_history_url else "",
-            "{coreutils}": coreutils_bin.path,
             "{unique_folder_name}": UNIQUE_FOLDER_NAME,
+            "{coreutils}": coreutils_bin.path,
+            "{jq}": jq_bin.path,
         },
     )
 
     ctx.actions.run_shell(
         inputs = ctx.files.docs + [ctx.file.last_updated_json, script],
         outputs = [out_folder],
-        tools = [coreutils_bin],
+        tools = [coreutils_bin, jq_bin],
         mnemonic = "DocsAddLastUpdated",
         command = "{script} \"$@\"".format(script = script.path),
         arguments = [":".join([f.path, f.short_path]) for f in ctx.files.docs],
@@ -82,5 +85,6 @@ docs_add_last_updated = rule(
     },
     toolchains = [
         "@bazel_lib//lib:coreutils_toolchain_type",
+        "@jq.bzl//jq/toolchain:type"
     ],
 )
