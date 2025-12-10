@@ -19,13 +19,13 @@ jobs:
     with:
       folders: |
         [
-          ".",
           "e2e/smoke",
           "e2e/git_last_updated"
         ]
       exclude: |
         [
           {"bazelVersion": "6.4.0"}
+          {"bzlmodEnabled": false}
         ]
   pre-commit:
     runs-on: ubuntu-latest
