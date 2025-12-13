@@ -38,6 +38,8 @@ plugins:
   - glightbox
 markdown_extensions:
   - tables
+  - toc:
+      permalink: true
   - pymdownx.superfences:
       custom_fences:
         - name: mermaid

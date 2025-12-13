@@ -1,13 +1,4 @@
 """Extensions for bzlmod.
-
-Installs a docgen toolchain.
-Every module can define a toolchain version under the default name, "docgen".
-The latest of those versions will be selected (the rest discarded),
-and will always be registered by rules_docgen.
-
-Additionally, the root module can define arbitrarily many more toolchain versions under different
-names (the latest version will be picked for each name) and can register them as it sees fit,
-effectively overriding the default named toolchain due to toolchain resolution precedence.
 """
 
 load(":repositories.bzl", "mkdocs_repository")
