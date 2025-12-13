@@ -152,6 +152,9 @@ def docs_action_impl(ctx):
 
 docs_action = rule(
     implementation = docs_action_impl,
+    doc = """
+    Processes documentation files and generates output with proper linking and file dependencies.
+    """,
     attrs = {
         "title": attr.string(
             doc = "The title of the navigation element",
