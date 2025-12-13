@@ -44,15 +44,15 @@ mkdocs_serve = rule(
 
     Example:
         mkdocs_serve(
-            name = "docs.serve",
+            name = "mkdocs.serve",
             config = ":mkdocs_config",
             docs = [":docs"],
         )
 
     Run with:
-        bazel run //:docs.serve
+        bazel run //:mkdocs.serve
         # or for live reload:
-        ibazel run //:docs.serve
+        ibazel run //:mkdocs.serve
 
     The server will be available at http://localhost:8000 by default.
     """,
