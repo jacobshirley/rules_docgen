@@ -5,7 +5,7 @@ load(":utils.bzl", "UNIQUE_FOLDER_NAME")
 
 def _docs_add_last_updated_impl(ctx):
     is_windows = ctx.target_platform_has_constraint(ctx.attr._windows_constraint[platform_common.ConstraintValueInfo])
-    
+
     out_folder = ctx.actions.declare_directory(ctx.attr.out_dir or ctx.label.name)
 
     date_format = ctx.attr.last_updated_date_format
@@ -19,7 +19,7 @@ def _docs_add_last_updated_impl(ctx):
         # PowerShell date format is different from Unix date format
         # Convert Unix format to PowerShell format
         ps_date_format = date_format.replace("+%B %d, %Y at %I:%M %p", "MMMM dd, yyyy 'at' hh:mm tt")
-        
+
         script = ctx.actions.declare_file(ctx.label.name + "_script.ps1")
         ctx.actions.expand_template(
             template = ctx.file._windows_script_template,

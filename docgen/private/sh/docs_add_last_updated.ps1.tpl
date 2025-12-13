@@ -24,7 +24,7 @@ function Update-File {
     $outDir = Split-Path $outputFullPath -Parent
     New-Item -Path $outDir -ItemType Directory -Force | Out-Null
     Copy-Item $InputPath $outputFullPath -Force
-    
+
     # Remove read-only attribute if present (Bazel files can be read-only)
     if (Test-Path $outputFullPath) {
         Set-ItemProperty -Path $outputFullPath -Name IsReadOnly -Value $false
@@ -73,7 +73,7 @@ function Update-File {
 }
 
 # Process arguments
-foreach ($arg in $args) {    
+foreach ($arg in $args) {
     # Split argument by colon to get long_path:short_path
     # On Windows, need to handle drive letters like C:, so split from the last occurrence
     # that's not followed by a backslash
