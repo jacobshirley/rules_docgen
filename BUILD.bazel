@@ -5,7 +5,7 @@ load("@package_metadata//licenses/rules:license.bzl", "license")
 load("@package_metadata//purl:purl.bzl", "purl")
 load("@package_metadata//rules:package_metadata.bzl", "package_metadata")
 load("@rules_python//python:pip.bzl", "compile_pip_requirements")
-load("//docgen:defs.bzl", "docs")
+load("//docgen:defs.bzl", "docs", "git_last_updated_timestamps", "docs_add_last_updated")
 
 compile_pip_requirements(
     name = "requirements",
@@ -51,6 +51,12 @@ gazelle(
     gazelle = "gazelle_bin",
 )
 
+git_last_updated_timestamps(
+    name = "git_last_updated_timestamps",
+    srcs = glob([".git/**"], allow_empty = True),
+    out = "last_updated.json",
+)
+
 docs(
     name = "docs",
     srcs = [
@@ -62,21 +68,28 @@ docs(
     },
 )
 
+docs_add_last_updated(
+    name = "docs_last_updated",
+    docs = ":docs",
+    last_updated_json = ":git_last_updated_timestamps",
+    out_dir = "last_updated_docs",
+)
+
 mkdocs_config(
     name = "mkdocs_config",
-    docs = ":docs",
+    docs = ":docs_last_updated",
     mkdocs_base = "mkdocs.tpl.yaml",
 )
 
 mkdocs_build(
     name = "mkdocs",
     config = ":mkdocs_config",
-    docs = [":docs"],
+    docs = [":docs_last_updated"],
 )
 
 # Serve the docs locally for development. Recommended to run with ibazel to auto-reload on changes.
 mkdocs_serve(
     name = "mkdocs.serve",
     config = ":mkdocs_config",
-    docs = [":docs"],
+    docs = [":docs_last_updated"],
 )

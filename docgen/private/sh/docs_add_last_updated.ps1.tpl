@@ -58,7 +58,7 @@ function Update-File {
     }
 
     # Add last updated information to the footer
-    $footerLine = "---"
+    $footerLine = "`n---"
 
     $updateHistoryUrl = "{update_history_url}"
     if ($updateHistoryUrl -and $hasUpdate) {

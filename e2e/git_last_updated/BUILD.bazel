@@ -14,7 +14,6 @@ git_last_updated_timestamps(
     srcs = glob(["git_test/**"]),
     out = "last_updated.json",
     git_dir = "git_test",
-    visibility = ["//visibility:public"],
 )
 
 diff_test(
@@ -28,7 +27,6 @@ docs_add_last_updated(
     docs = ":docs",
     last_updated_json = ":git_last_updated_timestamps",
     out_dir = "last_updated_docs",
-    visibility = ["//visibility:public"],
 )
 
 diff_test(

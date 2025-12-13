@@ -34,7 +34,7 @@ function update_file {
     fi
 
     # Add last updated information to the footer
-    footer_line="---"
+    footer_line="\n---"
 
     # If update history URL is provided, add it to the footer
     update_history_url="{update_history_url}"
