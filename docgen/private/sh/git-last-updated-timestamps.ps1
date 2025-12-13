@@ -75,12 +75,12 @@ foreach ($file in $files.Keys | Sort-Object) {
     $jsonLines += "  `"$file`": `"$($files[$file])`"$comma"
 }
 $jsonLines += "}"
-
-$result = $jsonLines -join "`n"
+$result = ($jsonLines -join "`n") + "`n"
 
 # Output result to file or stdout
 if (${output}) {
-    $result | Out-File -FilePath ${output} -Encoding UTF8 -NoNewline
+    # Add explicit newline at end to match bash behavior
+    [System.IO.File]::WriteAllText(${output}, $result, [System.Text.UTF8Encoding]::new($false))
     Write-Host "Timestamps written to ${output}"
 }
 else {
