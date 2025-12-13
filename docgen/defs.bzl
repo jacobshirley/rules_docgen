@@ -11,8 +11,8 @@ load("//docgen/private:mkdocs_config.bzl", _mkdocs_config = "mkdocs_config")
 load("//docgen/private:mkdocs_serve.bzl", _mkdocs_serve = "mkdocs_serve")
 load("//docgen/private:providers.bzl", _DocsLinkInfo = "DocsLinkInfo", _DocsProviderInfo = "DocsProviderInfo")
 
-docs_action_impl = _docs_action_impl
 docs = _docs
+docs_action_impl = _docs_action_impl
 docs_index = _docs_index
 docs_link = _docs_link
 docs_add_last_updated = _docs_add_last_updated

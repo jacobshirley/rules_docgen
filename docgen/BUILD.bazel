@@ -44,6 +44,7 @@ bzl_library(
 stardoc(
     name = "defs_md",
     out = "defs.md",
+    header_template = "//tools:header.vm",
     input = "defs.bzl",
     deps = [":defs"],
 )
@@ -51,6 +52,7 @@ stardoc(
 stardoc(
     name = "extensions_md",
     out = "extensions.md",
+    header_template = "//tools:header.vm",
     input = "extensions.bzl",
     deps = [":extensions"],
 )
@@ -58,6 +60,7 @@ stardoc(
 stardoc(
     name = "repositories_md",
     out = "repositories.md",
+    header_template = "//tools:header.vm",
     input = "repositories.bzl",
     deps = [":repositories"],
 )

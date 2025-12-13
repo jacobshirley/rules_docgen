@@ -4,3 +4,10 @@ bazelrc_preset(
     name = "preset",
     doc_link_template = "https://registry.build/flag/bazel?filter={flag}",
 )
+
+exports_files(
+    [
+        "header.vm",
+    ],
+    visibility = ["//visibility:public"],
+)
