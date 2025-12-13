@@ -2,6 +2,7 @@ exports_files(
     srcs = [
         "docs_add_last_updated.ps1.tpl",
         "docs_add_last_updated.sh.tpl",
+        "git-last-updated-timestamps.bat",
         "git-last-updated-timestamps.ps1",
         "git-last-updated-timestamps.sh",
     ],

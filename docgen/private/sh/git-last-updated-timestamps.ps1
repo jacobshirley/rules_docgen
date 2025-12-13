@@ -2,22 +2,22 @@
 
 param(
     [Parameter(Mandatory=$true)]
-    [string]$FilterExtensions,
+    [string]${filter-extensions},
 
     [Parameter(Mandatory=$false)]
-    [string]$Output,
+    [string]${output},
 
     [Parameter(Mandatory=$false)]
-    [string]$GitDir
+    [string]${git-dir}
 )
 
 # Set GIT_DIR environment variable if provided
-if ($GitDir) {
-    $env:GIT_DIR = $GitDir
+if (${git-dir}) {
+    $env:GIT_DIR = ${git-dir}
 
-    # Resolve git directory by following symlinks inside $GitDir if necessary
-    if (Test-Path $GitDir -PathType Container) {
-        $headPath = Join-Path $GitDir "HEAD"
+    # Resolve git directory by following symlinks inside $git-dir if necessary
+    if (Test-Path ${git-dir} -PathType Container) {
+        $headPath = Join-Path ${git-dir} "HEAD"
 
         # Check if HEAD is a symlink (junction/reparse point)
         if (Test-Path $headPath) {
@@ -36,7 +36,7 @@ if ($GitDir) {
 }
 
 # Split extensions and build pattern
-$extArray = $FilterExtensions -split ','
+$extArray = ${filter-extensions} -split ','
 $patterns = $extArray | ForEach-Object { "\.$_$" }
 $pattern = $patterns -join '|'
 
@@ -79,9 +79,9 @@ $jsonLines += "}"
 $result = $jsonLines -join "`n"
 
 # Output result to file or stdout
-if ($Output) {
-    $result | Out-File -FilePath $Output -Encoding UTF8 -NoNewline
-    Write-Host "Timestamps written to $Output"
+if (${output}) {
+    $result | Out-File -FilePath ${output} -Encoding UTF8 -NoNewline
+    Write-Host "Timestamps written to ${output}"
 }
 else {
     Write-Output $result

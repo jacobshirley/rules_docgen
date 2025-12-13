@@ -58,13 +58,6 @@ load("@bazel_lib//lib:repositories.bzl", "bazel_lib_dependencies", "bazel_lib_re
 
 bazel_lib_dependencies()
 
-# Required rules_shell dependencies
-load("@rules_shell//shell:repositories.bzl", "rules_shell_dependencies", "rules_shell_toolchains")
-
-rules_shell_dependencies()
-
-rules_shell_toolchains()
-
 # Register bazel-lib toolchains
 
 bazel_lib_register_toolchains()
