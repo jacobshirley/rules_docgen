@@ -18,7 +18,7 @@ Bazel rules for generating documentation websites using MkDocs with automatic na
 Add the following to your `MODULE.bazel`:
 
 ```python
-bazel_dep(name = "jacobshirley_rules_docgen", version = "0.0.0")  # Use latest version
+bazel_dep(name = "rules_docgen", version = "0.0.0")  # Use latest version
 ```
 
 Optionally, you can specify a requirements.txt file for MkDocs and its plugins. This is needed if you want to use MkDocs plugins.
@@ -36,7 +36,7 @@ pip.parse(
 use_repo(pip, "pypi")
 
 # Configure docgen with mkdocs plugins
-docgen = use_extension("@jacobshirley_rules_docgen//docgen:extensions.bzl", "docgen")
+docgen = use_extension("@rules_docgen//docgen:extensions.bzl", "docgen")
 docgen.mkdocs(
     plugins = [
         "mkdocs-glightbox",
@@ -144,7 +144,7 @@ markdown_extensions:
 ### 4. Create BUILD.bazel with documentation rules
 
 ```python
-load("@jacobshirley_rules_docgen//docgen:defs.bzl", "docs", "docs_index", "docs_link")
+load("@rules_docgen//docgen:defs.bzl", "docs", "docs_index", "docs_link")
 load("@mkdocs//:defs.bzl", "mkdocs_build", "mkdocs_config", "mkdocs_serve")
 
 # Define external links
@@ -266,7 +266,7 @@ See the complete working example in [e2e/smoke/](e2e/smoke/README.md) directory,
 Add last updated timestamps from git history to your documentation:
 
 ```python
-load("@jacobshirley_rules_docgen//docgen:defs.bzl", "docs_add_last_updated", "git_last_updated_timestamps")
+load("@rules_docgen//docgen:defs.bzl", "docs_add_last_updated", "git_last_updated_timestamps")
 
 git_last_updated_timestamps(
     name = "git_last_updated_timestamps",

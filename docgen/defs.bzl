@@ -9,6 +9,7 @@ load("//docgen/private:git_last_updated_timestamps.bzl", _git_last_updated_times
 load("//docgen/private:mkdocs_build.bzl", _mkdocs_build = "mkdocs_build")
 load("//docgen/private:mkdocs_config.bzl", _mkdocs_config = "mkdocs_config")
 load("//docgen/private:mkdocs_serve.bzl", _mkdocs_serve = "mkdocs_serve")
+load("//docgen/private:providers.bzl", _DocsLinkInfo = "DocsLinkInfo", _DocsProviderInfo = "DocsProviderInfo")
 
 docs_action_impl = _docs_action_impl
 docs = _docs
@@ -19,3 +20,5 @@ mkdocs_build = _mkdocs_build
 mkdocs_config = _mkdocs_config
 mkdocs_serve = _mkdocs_serve
 git_last_updated_timestamps = _git_last_updated_timestamps
+DocsProviderInfo = _DocsProviderInfo
+DocsLinkInfo = _DocsLinkInfo

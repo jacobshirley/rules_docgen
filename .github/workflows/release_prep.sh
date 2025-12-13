@@ -30,21 +30,12 @@ cat << EOF
 2. Add to your \`MODULE.bazel\` file:
 
 \`\`\`starlark
-bazel_dep(name = "jacobshirley_rules_docgen", version = "${TAG:1}")
+bazel_dep(name = "rules_docgen", version = "${TAG:1}")
 \`\`\`
 
 ## Using WORKSPACE
 
-Paste this snippet into your \`WORKSPACE.bazel\` file:
-
-\`\`\`starlark
-load("@bazel_tools//tools/build_defs/repo:http.bzl", "http_archive")
-http_archive(
-    name = "jacobshirley_rules_docgen",
-    sha256 = "${SHA}",
-    strip_prefix = "${PREFIX}",
-    url = "https://github.com/jacobshirley/rules_docgen/releases/download/${TAG}/${ARCHIVE}",
-)
+Workspace is not supported. Please use Bzlmod as described above.
 EOF
 
 awk 'f;/--SNIP--/{f=1}' e2e/smoke/WORKSPACE.bazel

@@ -1,4 +1,6 @@
 load("@bazel_lib//:bzl_library.bzl", "bzl_library")
+load("@stardoc//stardoc:stardoc.bzl", "stardoc")
+load("//docgen:defs.bzl", "docs")
 
 bzl_library(
     name = "repositories",
@@ -25,6 +27,7 @@ bzl_library(
         "//docgen/private:mkdocs_build",
         "//docgen/private:mkdocs_config",
         "//docgen/private:mkdocs_serve",
+        "//docgen/private:providers",
     ],
 )
 
@@ -36,4 +39,36 @@ bzl_library(
         ":repositories",
         "@bazel_tools//tools/build_defs/repo:cache.bzl",
     ],
+)
+
+stardoc(
+    name = "defs_md",
+    out = "defs.md",
+    input = "defs.bzl",
+    deps = [":defs"],
+)
+
+stardoc(
+    name = "extensions_md",
+    out = "extensions.md",
+    input = "extensions.bzl",
+    deps = [":extensions"],
+)
+
+stardoc(
+    name = "repositories_md",
+    out = "repositories.md",
+    input = "repositories.bzl",
+    deps = [":repositories"],
+)
+
+docs(
+    name = "docs",
+    srcs = [":defs_md"],
+    nav = {
+        ":defs.md": "@rules_docgen//docgen:defs.bzl",
+        ":extensions.md": "@rules_docgen//docgen:extensions.bzl",
+        ":repositories.md": "@rules_docgen//docgen:repositories.bzl",
+    },
+    visibility = ["//visibility:public"],
 )

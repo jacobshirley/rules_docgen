@@ -1,13 +1,13 @@
 module(
-    name = "jacobshirley_rules_docgen_e2e_smoke",
+    name = "rules_docgen_e2e_smoke",
 )
 
-bazel_dep(name = "jacobshirley_rules_docgen", version = "0.0.0")
+bazel_dep(name = "rules_docgen", version = "0.0.0")
 bazel_dep(name = "bazel_skylib", version = "1.8.2")
 bazel_dep(name = "bazel_lib", version = "3.0.0")
 
 local_path_override(
-    module_name = "jacobshirley_rules_docgen",
+    module_name = "rules_docgen",
     path = "../..",
 )
 
@@ -21,7 +21,7 @@ pip.parse(
 )
 use_repo(pip, "pypi")
 
-docgen = use_extension("@jacobshirley_rules_docgen//docgen:extensions.bzl", "docgen")
+docgen = use_extension("@rules_docgen//docgen:extensions.bzl", "docgen")
 docgen.mkdocs(
     # These must be defined in the requirements.txt
     plugins = [

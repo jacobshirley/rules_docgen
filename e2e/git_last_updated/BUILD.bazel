@@ -1,7 +1,7 @@
 """Tests for git_last_updated_timestamps rule."""
 
 load("@bazel_lib//lib:diff_test.bzl", "diff_test")
-load("@jacobshirley_rules_docgen//docgen:defs.bzl", "docs", "docs_add_last_updated", "git_last_updated_timestamps")
+load("@rules_docgen//docgen:defs.bzl", "docs", "docs_add_last_updated", "git_last_updated_timestamps")
 
 docs(
     name = "docs",
