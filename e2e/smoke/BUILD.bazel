@@ -3,11 +3,33 @@ Add a basic smoke-test target below.
 """
 
 load("@bazel_skylib//rules:build_test.bzl", "build_test")
-load("@jacobshirley_rules_docgen//docgen:defs.bzl", "docs")
+load("@jacobshirley_rules_docgen//docgen:defs.bzl", "docs", "docs_link")
 load("@mkdocs//:defs.bzl", "mkdocs_build", "mkdocs_config", "mkdocs_serve")
+
+docs_link(
+    name = "docs_link",
+    title = "Test Link",
+    url = "https://example.com",
+    visibility = ["//visibility:public"],
+)
+
+docs(
+    name = "other_docs",
+    entry = "other-info-2.md",
+    readme_content = "This is some other documentation content.",
+)
 
 docs(
     name = "docs",
+    nav = {
+        ":docs_link": "External Link",  # Custom link text.
+        "other-info.md": "Other Info",  # Link to a local markdown file.
+        ":other_docs": "Other Docs",  # Link to another docs target.
+    },
+    # Add headers to the documentation site here.
+    readme_header_links = {
+        ":docs_link": "",  # Will use the title as the link text.
+    },
 )
 
 mkdocs_config(
@@ -30,6 +52,7 @@ build_test(
     targets = [":mkdocs"],
 )
 
+# Serve the docs locally for development. Recommended to run with ibazel to auto-reload on changes.
 mkdocs_serve(
     name = "mkdocs.serve",
     config = ":mkdocs_config",

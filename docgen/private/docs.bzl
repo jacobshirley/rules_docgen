@@ -13,49 +13,28 @@ def docs(
         ],
         data = [],
         deps = [],
-        tags = [],
         title = None,
         nav = {},
         out = None,
         readme_content = "",
-        readme_header_links = {}):
+        readme_header_links = {},
+        **kwargs):
     out_folder = (out or name) + "/" + UNIQUE_FOLDER_NAME + "/" + native.package_name()
+
+    valid_target = file_exists(entry) or entry.find(":") != -1
 
     docs_action(
         name = name,
         srcs = srcs + data,
         deps = deps,
         title = title,
-        entrypoint = entry if file_exists(entry) or entry.find(":") != -1 else None,
+        entrypoint = entry if valid_target else None,
         nav = nav,
         out = out_folder,
-        visibility = ["//visibility:public"],
-        tags = ["docs"] + tags,
+        readme_filename = entry if not valid_target else None,
         readme_content = readme_content,
         readme_header_links = readme_header_links,
-    )
-
-    build_test(
-        name = name + ".test",
-        targets = [
-            ":" + name,
-        ],
-    )
-
-def docs_index(
-        name = "docs",
-        title = None,
-        entry = None,
-        nav = {},
-        tags = []):
-    docs_action(
-        name = name,
-        srcs = [],
-        title = title,
-        entrypoint = entry,
-        nav = nav,
-        visibility = ["//visibility:public"],
-        tags = ["docs"] + tags,
+        **kwargs
     )
 
     build_test(
