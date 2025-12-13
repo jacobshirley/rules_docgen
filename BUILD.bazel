@@ -5,7 +5,7 @@ load("@package_metadata//licenses/rules:license.bzl", "license")
 load("@package_metadata//purl:purl.bzl", "purl")
 load("@package_metadata//rules:package_metadata.bzl", "package_metadata")
 load("@rules_python//python:pip.bzl", "compile_pip_requirements")
-load("//docgen:defs.bzl", "docs", "git_last_updated_timestamps", "docs_add_last_updated")
+load("//docgen:defs.bzl", "docs", "docs_add_last_updated", "git_last_updated_timestamps")
 
 compile_pip_requirements(
     name = "requirements",
@@ -53,7 +53,10 @@ gazelle(
 
 git_last_updated_timestamps(
     name = "git_last_updated_timestamps",
-    srcs = glob([".git/**"], allow_empty = True),
+    srcs = glob(
+        [".git/**"],
+        allow_empty = True,
+    ),
     out = "last_updated.json",
 )
 
