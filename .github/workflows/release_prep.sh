@@ -37,4 +37,3 @@ bazel_dep(name = "rules_docgen", version = "${TAG:1}")
 
 Workspace is not supported. Please use Bzlmod as described above.
 EOF
-echo "\`\`\`"
