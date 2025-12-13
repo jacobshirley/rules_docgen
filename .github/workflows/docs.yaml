@@ -35,6 +35,15 @@ jobs:
       - name: Get formatted ref name
         id: formatted-ref-name
         run: echo "formatted_ref_name=${{ matrix.version }}" | sed 's/\//_/g' >> $GITHUB_OUTPUT
+      - uses: bazel-contrib/setup-bazel@0.15.0
+        name: Setup Bazel
+        with:
+          # Avoid downloading Bazel every time.
+          bazelisk-cache: true
+          # Store build cache per workflow.
+          disk-cache: ${{ github.workflow }}-docs
+          # Share repository cache between workflows.
+          repository-cache: true
       - name: Setup Pages
         id: pages
         uses: actions/configure-pages@983d7736d9b0ae728b81ab479565c72886d7745b #v5
