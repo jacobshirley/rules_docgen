@@ -37,6 +37,4 @@ bazel_dep(name = "rules_docgen", version = "${TAG:1}")
 
 Workspace is not supported. Please use Bzlmod as described above.
 EOF
-
-awk 'f;/--SNIP--/{f=1}' e2e/smoke/WORKSPACE.bazel
 echo "\`\`\`"
