@@ -98,8 +98,8 @@ END {
 
 # Output result to file or stdout
 if [ -n "$OUTPUT_FILE" ]; then
-	printf "%s" "$RESULT" > "$OUTPUT_FILE"
+	echo "$RESULT" > "$OUTPUT_FILE"
 	echo "Timestamps written to $OUTPUT_FILE" >&2
 else
-	printf "%s" "$RESULT"
+	echo "$RESULT"
 fi
