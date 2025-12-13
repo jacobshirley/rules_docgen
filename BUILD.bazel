@@ -4,7 +4,14 @@ load("@mkdocs//:defs.bzl", "mkdocs_build", "mkdocs_config", "mkdocs_serve")
 load("@package_metadata//licenses/rules:license.bzl", "license")
 load("@package_metadata//purl:purl.bzl", "purl")
 load("@package_metadata//rules:package_metadata.bzl", "package_metadata")
+load("@rules_python//python:pip.bzl", "compile_pip_requirements")
 load("//docgen:defs.bzl", "docs")
+
+compile_pip_requirements(
+    name = "requirements",
+    src = "requirements.in",
+    requirements_txt = "requirements.txt",
+)
 
 buildifier(
     name = "buildifier.fix",

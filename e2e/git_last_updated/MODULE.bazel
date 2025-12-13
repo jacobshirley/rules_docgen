@@ -6,25 +6,3 @@ local_path_override(
     module_name = "jacobshirley_rules_docgen",
     path = "../..",
 )
-
-bazel_dep(name = "rules_python", version = "1.7.0", dev_dependency = True)
-
-pip = use_extension("@rules_python//python/extensions:pip.bzl", "pip")
-pip.parse(
-    hub_name = "pypi",
-    python_version = "3.11",
-    requirements_lock = "//:requirements.txt",
-)
-use_repo(pip, "pypi")
-
-docgen = use_extension("@jacobshirley_rules_docgen//docgen:extensions.bzl", "docgen")
-docgen.mkdocs(
-    # These must be defined in the requirements.txt
-    plugins = [
-        "mkdocs-glightbox",
-        "mkdocs-material",
-        "mkdocs-table-reader-plugin",
-    ],
-    pypi_hub = "@pypi",
-)
-use_repo(docgen, "mkdocs")

@@ -19,6 +19,7 @@ jobs:
     with:
       folders: |
         [
+          ".",
           "e2e/smoke",
           "e2e/git_last_updated"
         ]

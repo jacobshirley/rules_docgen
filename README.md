@@ -4,12 +4,12 @@ Bazel rules for generating documentation websites using MkDocs with automatic na
 
 ## Features
 
-- **docs**: Generate documentation with automatic navigation from markdown files
-- **docs_index**: Create nested navigation structures
-- **docs_link**: Define external links in documentation
-- **mkdocs_build**: Build static documentation sites
-- **mkdocs_serve**: Serve documentation locally for development (works with ibazel for live reload)
-- **Git integration**: Add last updated timestamps from git history
+-   **docs**: Generate documentation with automatic navigation from markdown files
+-   **docs_index**: Create nested navigation structures
+-   **docs_link**: Define external links in documentation
+-   **mkdocs_build**: Build static documentation sites
+-   **mkdocs_serve**: Serve documentation locally for development (works with ibazel for live reload)
+-   **Git integration**: Add last updated timestamps from git history
 
 ## Installation
 
@@ -19,6 +19,11 @@ Add the following to your `MODULE.bazel`:
 
 ```python
 bazel_dep(name = "jacobshirley_rules_docgen", version = "0.0.0")  # Use latest version
+```
+
+Optionally, you can specify a requirements.txt file for MkDocs and its plugins. This is needed if you want to use MkDocs plugins.
+
+```python
 bazel_dep(name = "rules_python", version = "1.7.0")
 
 # Configure Python and pip dependencies
@@ -43,28 +48,21 @@ docgen.mkdocs(
 use_repo(docgen, "mkdocs")
 ```
 
+See [requirements.txt](e2e/smoke/requirements.txt) for an example requirements file.
+
 ### Using WORKSPACE
 
-From the release you wish to use:
-<https://github.com/jacobshirley/rules_docgen/releases>
-copy the WORKSPACE snippet into your `WORKSPACE` file.
+Workspace is not supported. Please use Bzlmod.
 
-To use a commit rather than a release, you can point at any SHA of the repo.
+## Setting up custom MkDocs or MkDocs plugins
 
-For example to use commit `abc123`:
+### 1. Follow installation instructions above
 
-1. Replace `url = "https://github.com/jacobshirley/rules_docgen/releases/download/v0.1.0/rules_docgen-v0.1.0.tar.gz"` with a GitHub-provided source archive like `url = "https://github.com/jacobshirley/rules_docgen/archive/abc123.tar.gz"`
-1. Replace `strip_prefix = "rules_docgen-0.1.0"` with `strip_prefix = "rules_docgen-abc123"`
-1. Update the `sha256`. The easiest way to do this is to comment out the line, then Bazel will
-   print a message with the correct value. Note that GitHub source archives don't have a strong
-   guarantee on the sha256 stability, see
-   <https://github.blog/2023-02-21-update-on-the-future-stability-of-source-code-archives-and-hashes/>
+Make sure to include `rules_python` and configure pip dependencies as shown above.
 
-## Setup
+### 2. Create requirements.txt
 
-### 1. Create requirements.txt
-
-Create a `requirements.txt` file with mkdocs and desired plugins:
+Create a `requirements.in` file with mkdocs and desired plugins:
 
 ```
 mkdocs
@@ -74,9 +72,27 @@ mkdocs-table-reader-plugin
 pymdown-extensions
 ```
 
+Then add a `BUILD.bazel` target to compile the requirements:
+
+```python
+load("@rules_python//python:pip.bzl", "compile_pip_requirements")
+
+compile_pip_requirements(
+    name = "requirements",
+    src = "requirements.in",
+    requirements_txt = "requirements.txt",
+)
+```
+
+To create/update the `requirements.txt`, run:
+
+```bash
+bazel build //:requirements.update
+```
+
 For a pinned requirements file with exact versions, see [e2e/smoke/requirements.txt](e2e/smoke/requirements.txt).
 
-### 2. Create mkdocs template (mkdocs.tpl.yaml)
+### 3. Create mkdocs template (mkdocs.tpl.yaml)
 
 Create a `mkdocs.tpl.yaml` file with your mkdocs configuration:
 
@@ -86,48 +102,48 @@ repo_url: https://github.com/yourusername/yourrepo
 docs_dir: docs
 site_dir: site
 theme:
-  name: material
-  palette:
-    - media: '(prefers-color-scheme)'
-      primary: custom
-      accent: custom
-      toggle:
-        icon: material/brightness-auto
-        name: Switch to light mode
-    - media: '(prefers-color-scheme: light)'
-      scheme: default
-      primary: custom
-      accent: custom
-      toggle:
-        icon: material/brightness-7
-        name: Switch to dark mode
-    - media: '(prefers-color-scheme: dark)'
-      scheme: slate
-      primary: custom
-      accent: custom
-      toggle:
-        icon: material/brightness-4
-        name: Switch to system preference
-  features:
-    - navigation.path
+    name: material
+    palette:
+        - media: '(prefers-color-scheme)'
+          primary: custom
+          accent: custom
+          toggle:
+              icon: material/brightness-auto
+              name: Switch to light mode
+        - media: '(prefers-color-scheme: light)'
+          scheme: default
+          primary: custom
+          accent: custom
+          toggle:
+              icon: material/brightness-7
+              name: Switch to dark mode
+        - media: '(prefers-color-scheme: dark)'
+          scheme: slate
+          primary: custom
+          accent: custom
+          toggle:
+              icon: material/brightness-4
+              name: Switch to system preference
+    features:
+        - navigation.path
 plugins:
-  - search
-  - table-reader
-  - glightbox
+    - search
+    - table-reader
+    - glightbox
 markdown_extensions:
-  - tables
-  - pymdownx.superfences:
-      custom_fences:
-        - name: mermaid
-          class: mermaid
-          format: "!!python/name:pymdownx.superfences.fence_code_format"
-  - pymdownx.snippets:
-      check_paths: true
-      base_path:
-        - "!relative"
+    - tables
+    - pymdownx.superfences:
+          custom_fences:
+              - name: mermaid
+                class: mermaid
+                format: '!!python/name:pymdownx.superfences.fence_code_format'
+    - pymdownx.snippets:
+          check_paths: true
+          base_path:
+              - '!relative'
 ```
 
-### 3. Create BUILD.bazel with documentation rules
+### 4. Create BUILD.bazel with documentation rules
 
 ```python
 load("@jacobshirley_rules_docgen//docgen:defs.bzl", "docs", "docs_index", "docs_link")
@@ -230,20 +246,20 @@ Then open your browser to http://localhost:8000
 
 The `nav` attribute in the `docs` rule creates the navigation structure:
 
-- **Markdown files**: `"path/to/file.md": "Display Name"`
-- **External links**: `":link_target": "Display Name"` (references a `docs_link` target)
-- **Other docs**: `":docs_target": "Display Name"` (references another `docs` target)
-- **Nested nav**: `":index_target": ""` (references a `docs_index` target; empty string uses the index's title)
+-   **Markdown files**: `"path/to/file.md": "Display Name"`
+-   **External links**: `":link_target": "Display Name"` (references a `docs_link` target)
+-   **Other docs**: `":docs_target": "Display Name"` (references another `docs` target)
+-   **Nested nav**: `":index_target": ""` (references a `docs_index` target; empty string uses the index's title)
 
 ## Example Project
 
 See the complete working example in [e2e/smoke/](e2e/smoke/) directory, which demonstrates:
 
-- Both Bzlmod (MODULE.bazel) and WORKSPACE setups
-- Complete BUILD.bazel configuration
-- Navigation with external links and nested sections
-- MkDocs configuration with Material theme
-- Development server setup
+-   Both Bzlmod (MODULE.bazel) and WORKSPACE setups
+-   Complete BUILD.bazel configuration
+-   Navigation with external links and nested sections
+-   MkDocs configuration with Material theme
+-   Development server setup
 
 ## Advanced Features
 

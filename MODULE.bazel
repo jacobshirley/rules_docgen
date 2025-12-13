@@ -56,8 +56,8 @@ docgen.mkdocs(
     name = "mkdocs",
     # These must be defined in the requirements.txt
     plugins = [
-        "mkdocs-glightbox",
         "mkdocs-material",
+        "mkdocs-glightbox",
         "mkdocs-table-reader-plugin",
     ],
     pypi_hub = "@default_pypi",
