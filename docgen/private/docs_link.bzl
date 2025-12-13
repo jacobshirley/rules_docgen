@@ -29,7 +29,7 @@ docs_link = rule(
             title = "GitHub Repository",
             url = "https://github.com/username/repo",
         )
-        
+
         docs(
             name = "docs",
             nav = {
