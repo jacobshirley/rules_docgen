@@ -35,7 +35,7 @@ jobs:
       - name: Get formatted ref name
         id: formatted-ref-name
         run: echo "formatted_ref_name=${{ matrix.version }}" | sed 's/\//_/g' >> $GITHUB_OUTPUT
-      - uses: bazel-contrib/setup-bazel@0.15.0
+      - uses: bazel-contrib/setup-bazel@0.16.0
         name: Setup Bazel
         with:
           # Avoid downloading Bazel every time.
