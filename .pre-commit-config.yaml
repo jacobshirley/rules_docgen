@@ -46,7 +46,7 @@ repos:
       - id: prettier
         exclude: '\.ya?ml$'
   - repo: https://github.com/google/yamlfmt
-    rev: v0.14.0
+    rev: v0.20.0
     hooks:
       - id: yamlfmt
         exclude: |
