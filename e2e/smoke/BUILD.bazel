@@ -4,7 +4,7 @@ Add a basic smoke-test target below.
 
 load("@bazel_skylib//rules:build_test.bzl", "build_test")
 load("@mkdocs//:defs.bzl", "mkdocs_build", "mkdocs_config", "mkdocs_serve")
-load("@rules_docgen//docgen:defs.bzl", "docs", "docs_index", "docs_link")
+load("@rules_docs//docgen:defs.bzl", "docs", "docs_index", "docs_link")
 load("@rules_python//python:pip.bzl", "compile_pip_requirements")
 
 # Run //:requirements.update to update the requirements.txt file.

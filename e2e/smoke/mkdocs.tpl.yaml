@@ -1,5 +1,5 @@
-site_name: rules_docgen docs
-repo_url: https://github.com/jacobshirley/rules_docgen
+site_name: rules_docs docs
+repo_url: https://github.com/jacobshirley/rules_docs
 docs_dir: docs
 site_dir: site
 theme:

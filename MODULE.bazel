@@ -1,7 +1,7 @@
 "Bazel dependencies"
 
 module(
-    name = "rules_docgen",
+    name = "rules_docs",
     version = "",
 )
 
@@ -46,9 +46,9 @@ E2E_FOLDERS = [
 
 [
     [
-        bazel_dep(name = "rules_docgen_e2e_%s" % folder, version = "0.0.0", dev_dependency = True),
+        bazel_dep(name = "rules_docs_e2e_%s" % folder, version = "0.0.0", dev_dependency = True),
         local_path_override(
-            module_name = "rules_docgen_e2e_%s" % folder,
+            module_name = "rules_docs_e2e_%s" % folder,
             path = "e2e/%s" % folder,
         ),
     ]

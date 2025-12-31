@@ -1,12 +1,12 @@
 module(
-    name = "rules_docgen_e2e_git_last_updated",
+    name = "rules_docs_e2e_git_last_updated",
 )
 
-bazel_dep(name = "rules_docgen", version = "0.0.0")
+bazel_dep(name = "rules_docs", version = "0.0.0")
 bazel_dep(name = "bazel_skylib", version = "1.8.2")
 bazel_dep(name = "bazel_lib", version = "3.0.0")
 
 local_path_override(
-    module_name = "rules_docgen",
+    module_name = "rules_docs",
     path = "../..",
 )

@@ -63,12 +63,12 @@ git_last_updated_timestamps(
 docs_index(
     name = "examples_docs_index",
     srcs = [
-        "@rules_docgen_e2e_git_last_updated//:docs",
-        "@rules_docgen_e2e_smoke//:docs",
+        "@rules_docs_e2e_git_last_updated//:docs",
+        "@rules_docs_e2e_smoke//:docs",
     ],
     nav = {
-        "@rules_docgen_e2e_smoke//:docs": "e2e/smoke",
-        "@rules_docgen_e2e_git_last_updated//:docs": "e2e/git_last_updated",
+        "@rules_docs_e2e_smoke//:docs": "e2e/smoke",
+        "@rules_docs_e2e_git_last_updated//:docs": "e2e/git_last_updated",
     },
     title = "examples",
 )

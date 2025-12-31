@@ -62,7 +62,7 @@ jobs:
           path: ./docs-html
           retention-days: 1
       - name: Where to find the docs
-        run: echo "You can find the documentation for version ${{ matrix.version }} at https://jacobshirley.github.io/rules_docgen/${{ steps.formatted-ref-name.outputs.formatted_ref_name }}" >> $GITHUB_STEP_SUMMARY
+        run: echo "You can find the documentation for version ${{ matrix.version }} at https://jacobshirley.github.io/rules_docs/${{ steps.formatted-ref-name.outputs.formatted_ref_name }}" >> $GITHUB_STEP_SUMMARY
   combine:
     name: Combine Docs
     runs-on: ubuntu-latest

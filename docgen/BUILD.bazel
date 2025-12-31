@@ -69,9 +69,9 @@ docs(
     name = "docs",
     srcs = [":defs_md"],
     nav = {
-        ":defs.md": "@rules_docgen//docgen:defs.bzl",
-        ":extensions.md": "@rules_docgen//docgen:extensions.bzl",
-        ":repositories.md": "@rules_docgen//docgen:repositories.bzl",
+        ":defs.md": "@rules_docs//docgen:defs.bzl",
+        ":extensions.md": "@rules_docs//docgen:extensions.bzl",
+        ":repositories.md": "@rules_docs//docgen:repositories.bzl",
     },
     visibility = ["//visibility:public"],
 )

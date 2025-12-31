@@ -1,6 +1,6 @@
 <!-- Generated with Stardoc: http://skydoc.bazel.build -->
 
 <!-- The below is needed so that the nav is created correctly -->
-# rules_docgen
+# rules_docs
 
 ${moduleDocstring}

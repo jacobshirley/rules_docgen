@@ -1,5 +1,5 @@
 site_name: e2e_git_last_updated
-repo_url: https://github.com/jacobshirley/rules_docgen/tree/main/e2e/git_last_updated
+repo_url: https://github.com/jacobshirley/rules_docs/tree/main/e2e/git_last_updated
 docs_dir: docs
 site_dir: site
 theme:
