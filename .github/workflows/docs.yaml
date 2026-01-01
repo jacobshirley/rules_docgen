@@ -27,7 +27,8 @@ jobs:
         version:
           - ${{ github.ref_name }}
           - latest
-          - v1
+          - v0
+          - main
     steps:
       - name: Checkout ${{ matrix.version }}
         uses: actions/checkout@8e8c483db84b4bee98b60c0593521ed34d9990e8 # v6
