@@ -1,0 +1,999 @@
+openapi: 3.0.3
+info:
+  title: Task Management API
+  description: |
+    A comprehensive REST API for managing tasks and projects. This API provides endpoints for creating, 
+    reading, updating, and deleting tasks, as well as managing task assignments, priorities, and statuses.
+    
+    ## Features
+    
+    - **Task Management**: Create, update, and delete tasks with rich metadata
+    - **Project Organization**: Group tasks into projects for better organization
+    - **User Assignments**: Assign tasks to team members
+    - **Priority Management**: Set and update task priorities
+    - **Status Tracking**: Track task progress through various statuses
+    - **Search & Filtering**: Find tasks by various criteria
+    
+    ## Authentication
+    
+    This API uses Bearer token authentication. Include the token in the Authorization header:
+    
+    ```
+    Authorization: Bearer <your-token>
+    ```
+    
+    ## Rate Limiting
+    
+    API requests are limited to 1000 requests per hour per API key. Rate limit information is included 
+    in response headers.
+  version: 1.0.0
+  contact:
+    name: API Support
+    email: api-support@example.com
+    url: https://api.example.com/support
+  license:
+    name: MIT
+    url: https://opensource.org/licenses/MIT
+  termsOfService: https://api.example.com/terms
+
+servers:
+  - url: https://api.example.com/v1
+    description: Production server
+  - url: https://staging-api.example.com/v1
+    description: Staging server
+  - url: http://localhost:8080/v1
+    description: Local development server
+
+tags:
+  - name: tasks
+    description: |
+      Operations related to task management. Tasks are the core entities in this API and represent 
+      work items that need to be completed. Each task can have a title, description, priority, status, 
+      and assigned user.
+  - name: projects
+    description: |
+      Operations for managing projects. Projects are collections of related tasks that help organize 
+      work into logical groupings.
+  - name: users
+    description: |
+      User management operations. Users can be assigned to tasks and are used for tracking 
+      responsibility and workload.
+
+paths:
+  /tasks:
+    get:
+      tags:
+        - tasks
+      summary: List all tasks
+      description: |
+        Retrieve a paginated list of all tasks. Supports filtering by status, priority, assigned user, 
+        and project. Results can be sorted by creation date, due date, or priority.
+        
+        **Use Cases:**
+        - Display all tasks in a dashboard
+        - Filter tasks by status (e.g., show only "in-progress" tasks)
+        - Find tasks assigned to a specific user
+        - List tasks for a particular project
+      operationId: listTasks
+      parameters:
+        - name: status
+          in: query
+          description: Filter tasks by status. Multiple values can be provided as comma-separated list.
+          required: false
+          schema:
+            type: string
+            enum: [pending, in-progress, completed, cancelled]
+          example: in-progress
+        - name: priority
+          in: query
+          description: Filter tasks by priority level
+          required: false
+          schema:
+            type: string
+            enum: [low, medium, high, urgent]
+          example: high
+        - name: assignedTo
+          in: query
+          description: Filter tasks assigned to a specific user ID
+          required: false
+          schema:
+            type: string
+            format: uuid
+          example: "550e8400-e29b-41d4-a716-446655440000"
+        - name: projectId
+          in: query
+          description: Filter tasks belonging to a specific project
+          required: false
+          schema:
+            type: string
+            format: uuid
+          example: "550e8400-e29b-41d4-a716-446655440001"
+        - name: page
+          in: query
+          description: Page number for pagination (1-indexed)
+          required: false
+          schema:
+            type: integer
+            minimum: 1
+            default: 1
+          example: 1
+        - name: limit
+          in: query
+          description: Number of items per page
+          required: false
+          schema:
+            type: integer
+            minimum: 1
+            maximum: 100
+            default: 20
+          example: 20
+        - name: sortBy
+          in: query
+          description: Field to sort by
+          required: false
+          schema:
+            type: string
+            enum: [createdAt, dueDate, priority, title]
+            default: createdAt
+          example: dueDate
+        - name: order
+          in: query
+          description: Sort order
+          required: false
+          schema:
+            type: string
+            enum: [asc, desc]
+            default: desc
+          example: asc
+      responses:
+        '200':
+          description: Successful response with a list of tasks
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/TaskListResponse'
+              examples:
+                success:
+                  summary: Successful task list
+                  value:
+                    data:
+                      - id: "550e8400-e29b-41d4-a716-446655440000"
+                        title: "Implement user authentication"
+                        description: "Add JWT-based authentication to the API"
+                        status: "in-progress"
+                        priority: "high"
+                        assignedTo: "550e8400-e29b-41d4-a716-446655440010"
+                        projectId: "550e8400-e29b-41d4-a716-446655440001"
+                        dueDate: "2024-12-31T23:59:59Z"
+                        createdAt: "2024-01-15T10:30:00Z"
+                        updatedAt: "2024-01-20T14:22:00Z"
+                    pagination:
+                      page: 1
+                      limit: 20
+                      total: 45
+                      totalPages: 3
+        '400':
+          $ref: '#/components/responses/BadRequest'
+        '401':
+          $ref: '#/components/responses/Unauthorized'
+        '500':
+          $ref: '#/components/responses/InternalServerError'
+      security:
+        - bearerAuth: []
+
+    post:
+      tags:
+        - tasks
+      summary: Create a new task
+      description: |
+        Create a new task with the provided details. The task will be created with a "pending" status 
+        by default unless otherwise specified. A unique task ID will be automatically generated.
+        
+        **Required Fields:**
+        - `title`: A descriptive title for the task
+        - `description`: Detailed description of what needs to be done
+        
+        **Optional Fields:**
+        - `status`: Initial status (defaults to "pending")
+        - `priority`: Priority level (defaults to "medium")
+        - `assignedTo`: User ID to assign the task to
+        - `projectId`: Project ID to associate the task with
+        - `dueDate`: Target completion date
+      operationId: createTask
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/CreateTaskRequest'
+            examples:
+              basic:
+                summary: Basic task creation
+                value:
+                  title: "Review pull request #123"
+                  description: "Review the changes in PR #123 and provide feedback"
+                  priority: "medium"
+              withAssignment:
+                summary: Task with assignment
+                value:
+                  title: "Fix critical bug in payment processing"
+                  description: "Investigate and fix the payment processing bug reported by users"
+                  status: "in-progress"
+                  priority: "urgent"
+                  assignedTo: "550e8400-e29b-41d4-a716-446655440010"
+                  dueDate: "2024-01-25T17:00:00Z"
+              projectTask:
+                summary: Task in a project
+                value:
+                  title: "Design new dashboard UI"
+                  description: "Create mockups and wireframes for the new dashboard"
+                  priority: "high"
+                  projectId: "550e8400-e29b-41d4-a716-446655440001"
+                  dueDate: "2024-02-15T23:59:59Z"
+      responses:
+        '201':
+          description: Task created successfully
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Task'
+              example:
+                id: "550e8400-e29b-41d4-a716-446655440000"
+                title: "Review pull request #123"
+                description: "Review the changes in PR #123 and provide feedback"
+                status: "pending"
+                priority: "medium"
+                assignedTo: null
+                projectId: null
+                dueDate: null
+                createdAt: "2024-01-20T10:00:00Z"
+                updatedAt: "2024-01-20T10:00:00Z"
+        '400':
+          $ref: '#/components/responses/BadRequest'
+        '401':
+          $ref: '#/components/responses/Unauthorized'
+        '422':
+          $ref: '#/components/responses/ValidationError'
+        '500':
+          $ref: '#/components/responses/InternalServerError'
+      security:
+        - bearerAuth: []
+
+  /tasks/{taskId}:
+    get:
+      tags:
+        - tasks
+      summary: Get a specific task
+      description: |
+        Retrieve detailed information about a specific task by its ID. Returns all task metadata 
+        including assignment, project association, and timestamps.
+      operationId: getTask
+      parameters:
+        - name: taskId
+          in: path
+          required: true
+          description: Unique identifier of the task
+          schema:
+            type: string
+            format: uuid
+          example: "550e8400-e29b-41d4-a716-446655440000"
+      responses:
+        '200':
+          description: Task details retrieved successfully
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Task'
+        '401':
+          $ref: '#/components/responses/Unauthorized'
+        '404':
+          $ref: '#/components/responses/NotFound'
+        '500':
+          $ref: '#/components/responses/InternalServerError'
+      security:
+        - bearerAuth: []
+
+    put:
+      tags:
+        - tasks
+      summary: Update a task
+      description: |
+        Update an existing task. All provided fields will be updated. Fields not included in the 
+        request will remain unchanged. The `updatedAt` timestamp will be automatically updated.
+        
+        **Note:** This is a full update operation. To partially update a task, use the PATCH endpoint.
+      operationId: updateTask
+      parameters:
+        - name: taskId
+          in: path
+          required: true
+          description: Unique identifier of the task to update
+          schema:
+            type: string
+            format: uuid
+          example: "550e8400-e29b-41d4-a716-446655440000"
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/UpdateTaskRequest'
+            example:
+              title: "Implement user authentication - Updated"
+              description: "Add JWT-based authentication to the API with refresh token support"
+              status: "in-progress"
+              priority: "high"
+              assignedTo: "550e8400-e29b-41d4-a716-446655440010"
+              projectId: "550e8400-e29b-41d4-a716-446655440001"
+              dueDate: "2024-12-31T23:59:59Z"
+      responses:
+        '200':
+          description: Task updated successfully
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Task'
+        '400':
+          $ref: '#/components/responses/BadRequest'
+        '401':
+          $ref: '#/components/responses/Unauthorized'
+        '404':
+          $ref: '#/components/responses/NotFound'
+        '422':
+          $ref: '#/components/responses/ValidationError'
+        '500':
+          $ref: '#/components/responses/InternalServerError'
+      security:
+        - bearerAuth: []
+
+    patch:
+      tags:
+        - tasks
+      summary: Partially update a task
+      description: |
+        Partially update a task. Only the fields provided in the request will be updated. This is 
+        useful when you only need to change specific fields (e.g., just the status or priority).
+      operationId: patchTask
+      parameters:
+        - name: taskId
+          in: path
+          required: true
+          description: Unique identifier of the task to update
+          schema:
+            type: string
+            format: uuid
+          example: "550e8400-e29b-41d4-a716-446655440000"
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/PatchTaskRequest'
+            examples:
+              statusUpdate:
+                summary: Update only status
+                value:
+                  status: "completed"
+              priorityUpdate:
+                summary: Update only priority
+                value:
+                  priority: "urgent"
+              assignTask:
+                summary: Assign task to user
+                value:
+                  assignedTo: "550e8400-e29b-41d4-a716-446655440010"
+                  status: "in-progress"
+      responses:
+        '200':
+          description: Task updated successfully
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Task'
+        '400':
+          $ref: '#/components/responses/BadRequest'
+        '401':
+          $ref: '#/components/responses/Unauthorized'
+        '404':
+          $ref: '#/components/responses/NotFound'
+        '422':
+          $ref: '#/components/responses/ValidationError'
+        '500':
+          $ref: '#/components/responses/InternalServerError'
+      security:
+        - bearerAuth: []
+
+    delete:
+      tags:
+        - tasks
+      summary: Delete a task
+      description: |
+        Permanently delete a task. This action cannot be undone. The task will be removed from all 
+        associated projects and user assignments.
+        
+        **Warning:** Deleted tasks cannot be recovered.
+      operationId: deleteTask
+      parameters:
+        - name: taskId
+          in: path
+          required: true
+          description: Unique identifier of the task to delete
+          schema:
+            type: string
+            format: uuid
+          example: "550e8400-e29b-41d4-a716-446655440000"
+      responses:
+        '204':
+          description: Task deleted successfully
+        '401':
+          $ref: '#/components/responses/Unauthorized'
+        '404':
+          $ref: '#/components/responses/NotFound'
+        '500':
+          $ref: '#/components/responses/InternalServerError'
+      security:
+        - bearerAuth: []
+
+  /projects:
+    get:
+      tags:
+        - projects
+      summary: List all projects
+      description: |
+        Retrieve a paginated list of all projects. Projects are collections of related tasks that 
+        help organize work into logical groupings.
+      operationId: listProjects
+      parameters:
+        - name: page
+          in: query
+          description: Page number for pagination
+          required: false
+          schema:
+            type: integer
+            minimum: 1
+            default: 1
+        - name: limit
+          in: query
+          description: Number of items per page
+          required: false
+          schema:
+            type: integer
+            minimum: 1
+            maximum: 100
+            default: 20
+      responses:
+        '200':
+          description: Successful response with a list of projects
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ProjectListResponse'
+        '401':
+          $ref: '#/components/responses/Unauthorized'
+        '500':
+          $ref: '#/components/responses/InternalServerError'
+      security:
+        - bearerAuth: []
+
+    post:
+      tags:
+        - projects
+      summary: Create a new project
+      description: |
+        Create a new project. Projects help organize related tasks and provide a way to group work 
+        by feature, team, or initiative.
+      operationId: createProject
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/CreateProjectRequest'
+            example:
+              name: "Q1 2024 Product Launch"
+              description: "All tasks related to the Q1 2024 product launch initiative"
+      responses:
+        '201':
+          description: Project created successfully
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Project'
+        '400':
+          $ref: '#/components/responses/BadRequest'
+        '401':
+          $ref: '#/components/responses/Unauthorized'
+        '422':
+          $ref: '#/components/responses/ValidationError'
+        '500':
+          $ref: '#/components/responses/InternalServerError'
+      security:
+        - bearerAuth: []
+
+  /projects/{projectId}:
+    get:
+      tags:
+        - projects
+      summary: Get a specific project
+      description: |
+        Retrieve detailed information about a project, including all associated tasks.
+      operationId: getProject
+      parameters:
+        - name: projectId
+          in: path
+          required: true
+          description: Unique identifier of the project
+          schema:
+            type: string
+            format: uuid
+          example: "550e8400-e29b-41d4-a716-446655440001"
+      responses:
+        '200':
+          description: Project details retrieved successfully
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Project'
+        '401':
+          $ref: '#/components/responses/Unauthorized'
+        '404':
+          $ref: '#/components/responses/NotFound'
+        '500':
+          $ref: '#/components/responses/InternalServerError'
+      security:
+        - bearerAuth: []
+
+  /users:
+    get:
+      tags:
+        - users
+      summary: List all users
+      description: |
+        Retrieve a list of all users in the system. Users can be assigned to tasks and are used 
+        for tracking responsibility and workload.
+      operationId: listUsers
+      responses:
+        '200':
+          description: Successful response with a list of users
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  data:
+                    type: array
+                    items:
+                      $ref: '#/components/schemas/User'
+        '401':
+          $ref: '#/components/responses/Unauthorized'
+        '500':
+          $ref: '#/components/responses/InternalServerError'
+      security:
+        - bearerAuth: []
+
+components:
+  schemas:
+    Task:
+      type: object
+      description: |
+        A task represents a single work item that needs to be completed. Tasks can be assigned to 
+        users, associated with projects, and tracked through various statuses and priorities.
+      required:
+        - id
+        - title
+        - description
+        - status
+        - priority
+        - createdAt
+        - updatedAt
+      properties:
+        id:
+          type: string
+          format: uuid
+          description: Unique identifier for the task
+          example: "550e8400-e29b-41d4-a716-446655440000"
+        title:
+          type: string
+          description: A brief, descriptive title for the task
+          minLength: 1
+          maxLength: 200
+          example: "Implement user authentication"
+        description:
+          type: string
+          description: Detailed description of what needs to be done
+          maxLength: 5000
+          example: "Add JWT-based authentication to the API with refresh token support"
+        status:
+          $ref: '#/components/schemas/TaskStatus'
+        priority:
+          $ref: '#/components/schemas/TaskPriority'
+        assignedTo:
+          type: string
+          format: uuid
+          nullable: true
+          description: ID of the user assigned to this task, or null if unassigned
+          example: "550e8400-e29b-41d4-a716-446655440010"
+        projectId:
+          type: string
+          format: uuid
+          nullable: true
+          description: ID of the project this task belongs to, or null if not associated with a project
+          example: "550e8400-e29b-41d4-a716-446655440001"
+        dueDate:
+          type: string
+          format: date-time
+          nullable: true
+          description: Target completion date and time for the task
+          example: "2024-12-31T23:59:59Z"
+        createdAt:
+          type: string
+          format: date-time
+          description: Timestamp when the task was created
+          example: "2024-01-15T10:30:00Z"
+        updatedAt:
+          type: string
+          format: date-time
+          description: Timestamp when the task was last updated
+          example: "2024-01-20T14:22:00Z"
+
+    TaskStatus:
+      type: string
+      enum: [pending, in-progress, completed, cancelled]
+      description: |
+        The current status of the task.
+        
+        - **pending**: Task has been created but work has not started
+        - **in-progress**: Work on the task is currently underway
+        - **completed**: Task has been finished
+        - **cancelled**: Task has been cancelled and will not be completed
+      example: "in-progress"
+
+    TaskPriority:
+      type: string
+      enum: [low, medium, high, urgent]
+      description: |
+        The priority level of the task, indicating its relative importance.
+        
+        - **low**: Can be done when time permits
+        - **medium**: Normal priority, should be completed in due course
+        - **high**: Important, should be prioritized
+        - **urgent**: Critical, requires immediate attention
+      example: "high"
+
+    CreateTaskRequest:
+      type: object
+      required:
+        - title
+        - description
+      description: Request body for creating a new task
+      properties:
+        title:
+          type: string
+          description: A brief, descriptive title for the task
+          minLength: 1
+          maxLength: 200
+          example: "Review pull request #123"
+        description:
+          type: string
+          description: Detailed description of what needs to be done
+          maxLength: 5000
+          example: "Review the changes in PR #123 and provide feedback"
+        status:
+          $ref: '#/components/schemas/TaskStatus'
+        priority:
+          $ref: '#/components/schemas/TaskPriority'
+        assignedTo:
+          type: string
+          format: uuid
+          nullable: true
+          description: ID of the user to assign this task to
+          example: "550e8400-e29b-41d4-a716-446655440010"
+        projectId:
+          type: string
+          format: uuid
+          nullable: true
+          description: ID of the project to associate this task with
+          example: "550e8400-e29b-41d4-a716-446655440001"
+        dueDate:
+          type: string
+          format: date-time
+          nullable: true
+          description: Target completion date and time
+          example: "2024-12-31T23:59:59Z"
+
+    UpdateTaskRequest:
+      type: object
+      required:
+        - title
+        - description
+      description: Request body for updating a task (full update)
+      properties:
+        title:
+          type: string
+          minLength: 1
+          maxLength: 200
+        description:
+          type: string
+          maxLength: 5000
+        status:
+          $ref: '#/components/schemas/TaskStatus'
+        priority:
+          $ref: '#/components/schemas/TaskPriority'
+        assignedTo:
+          type: string
+          format: uuid
+          nullable: true
+        projectId:
+          type: string
+          format: uuid
+          nullable: true
+        dueDate:
+          type: string
+          format: date-time
+          nullable: true
+
+    PatchTaskRequest:
+      type: object
+      description: Request body for partially updating a task
+      properties:
+        title:
+          type: string
+          minLength: 1
+          maxLength: 200
+        description:
+          type: string
+          maxLength: 5000
+        status:
+          $ref: '#/components/schemas/TaskStatus'
+        priority:
+          $ref: '#/components/schemas/TaskPriority'
+        assignedTo:
+          type: string
+          format: uuid
+          nullable: true
+        projectId:
+          type: string
+          format: uuid
+          nullable: true
+        dueDate:
+          type: string
+          format: date-time
+          nullable: true
+
+    TaskListResponse:
+      type: object
+      description: Response containing a paginated list of tasks
+      properties:
+        data:
+          type: array
+          items:
+            $ref: '#/components/schemas/Task'
+        pagination:
+          $ref: '#/components/schemas/Pagination'
+
+    Project:
+      type: object
+      description: A project represents a collection of related tasks
+      required:
+        - id
+        - name
+        - createdAt
+        - updatedAt
+      properties:
+        id:
+          type: string
+          format: uuid
+          description: Unique identifier for the project
+          example: "550e8400-e29b-41d4-a716-446655440001"
+        name:
+          type: string
+          description: Name of the project
+          minLength: 1
+          maxLength: 200
+          example: "Q1 2024 Product Launch"
+        description:
+          type: string
+          nullable: true
+          description: Detailed description of the project
+          maxLength: 5000
+          example: "All tasks related to the Q1 2024 product launch initiative"
+        createdAt:
+          type: string
+          format: date-time
+          description: Timestamp when the project was created
+          example: "2024-01-01T00:00:00Z"
+        updatedAt:
+          type: string
+          format: date-time
+          description: Timestamp when the project was last updated
+          example: "2024-01-15T10:30:00Z"
+
+    CreateProjectRequest:
+      type: object
+      required:
+        - name
+      description: Request body for creating a new project
+      properties:
+        name:
+          type: string
+          description: Name of the project
+          minLength: 1
+          maxLength: 200
+          example: "Q1 2024 Product Launch"
+        description:
+          type: string
+          nullable: true
+          description: Detailed description of the project
+          maxLength: 5000
+          example: "All tasks related to the Q1 2024 product launch initiative"
+
+    ProjectListResponse:
+      type: object
+      description: Response containing a paginated list of projects
+      properties:
+        data:
+          type: array
+          items:
+            $ref: '#/components/schemas/Project'
+        pagination:
+          $ref: '#/components/schemas/Pagination'
+
+    User:
+      type: object
+      description: A user in the system who can be assigned to tasks
+      required:
+        - id
+        - name
+        - email
+      properties:
+        id:
+          type: string
+          format: uuid
+          description: Unique identifier for the user
+          example: "550e8400-e29b-41d4-a716-446655440010"
+        name:
+          type: string
+          description: Full name of the user
+          example: "John Doe"
+        email:
+          type: string
+          format: email
+          description: Email address of the user
+          example: "john.doe@example.com"
+        role:
+          type: string
+          description: Role of the user in the system
+          enum: [admin, developer, manager, viewer]
+          example: "developer"
+
+    Pagination:
+      type: object
+      description: Pagination metadata for list responses
+      required:
+        - page
+        - limit
+        - total
+        - totalPages
+      properties:
+        page:
+          type: integer
+          description: Current page number (1-indexed)
+          minimum: 1
+          example: 1
+        limit:
+          type: integer
+          description: Number of items per page
+          minimum: 1
+          example: 20
+        total:
+          type: integer
+          description: Total number of items across all pages
+          minimum: 0
+          example: 45
+        totalPages:
+          type: integer
+          description: Total number of pages
+          minimum: 0
+          example: 3
+
+    Error:
+      type: object
+      description: Standard error response format
+      required:
+        - error
+        - message
+      properties:
+        error:
+          type: string
+          description: Error code or identifier
+          example: "VALIDATION_ERROR"
+        message:
+          type: string
+          description: Human-readable error message
+          example: "The provided data failed validation"
+        details:
+          type: object
+          description: Additional error details, typically validation errors
+          additionalProperties:
+            type: array
+            items:
+              type: string
+          example:
+            title: ["Title is required"]
+            priority: ["Invalid priority value. Must be one of: low, medium, high, urgent"]
+
+  responses:
+    BadRequest:
+      description: |
+        The request was malformed or invalid. This typically occurs when required parameters are 
+        missing or have invalid values.
+      content:
+        application/json:
+          schema:
+            $ref: '#/components/schemas/Error'
+          example:
+            error: "BAD_REQUEST"
+            message: "Invalid request parameters"
+
+    Unauthorized:
+      description: |
+        Authentication is required or the provided authentication token is invalid or expired. 
+        Include a valid Bearer token in the Authorization header.
+      content:
+        application/json:
+          schema:
+            $ref: '#/components/schemas/Error'
+          example:
+            error: "UNAUTHORIZED"
+            message: "Authentication required"
+
+    NotFound:
+      description: |
+        The requested resource was not found. This could mean the resource doesn't exist, has been 
+        deleted, or you don't have permission to access it.
+      content:
+        application/json:
+          schema:
+            $ref: '#/components/schemas/Error'
+          example:
+            error: "NOT_FOUND"
+            message: "Resource not found"
+
+    ValidationError:
+      description: |
+        The request data failed validation. The response includes details about which fields 
+        failed validation and why.
+      content:
+        application/json:
+          schema:
+            $ref: '#/components/schemas/Error'
+          example:
+            error: "VALIDATION_ERROR"
+            message: "The provided data failed validation"
+            details:
+              title: ["Title is required and must be at least 1 character"]
+              priority: ["Invalid priority value. Must be one of: low, medium, high, urgent"]
+
+    InternalServerError:
+      description: |
+        An unexpected error occurred on the server. This is typically a temporary condition. 
+        If the problem persists, contact support.
+      content:
+        application/json:
+          schema:
+            $ref: '#/components/schemas/Error'
+          example:
+            error: "INTERNAL_SERVER_ERROR"
+            message: "An unexpected error occurred"
+
+  securitySchemes:
+    bearerAuth:
+      type: http
+      scheme: bearer
+      bearerFormat: JWT
+      description: |
+        JWT Bearer token authentication. Include the token in the Authorization header as:
+        `Authorization: Bearer <your-token>`
+        
+        Tokens can be obtained from the authentication endpoint (not documented in this API).
+

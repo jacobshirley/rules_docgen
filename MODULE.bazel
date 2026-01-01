@@ -39,18 +39,20 @@ docgen.mkdocs(
 )
 use_repo(docgen, "mkdocs")
 
-E2E_FOLDERS = [
-    "git_last_updated",
-    "smoke",
+NESTED_MODULES = [
+    "e2e/git_last_updated",
+    "e2e/smoke",
+    "examples/swagger",
 ]
 
 [
     [
-        bazel_dep(name = "rules_docs_e2e_%s" % folder, version = "0.0.0", dev_dependency = True),
+        bazel_dep(name = "rules_docs_%s" % escaped_folder, version = "0.0.0", dev_dependency = True),
         local_path_override(
-            module_name = "rules_docs_e2e_%s" % folder,
-            path = "e2e/%s" % folder,
+            module_name = "rules_docs_%s" % escaped_folder,
+            path = folder,
         ),
     ]
-    for folder in E2E_FOLDERS
+    for folder in NESTED_MODULES
+    for escaped_folder in [folder.replace("/", "_")]
 ]

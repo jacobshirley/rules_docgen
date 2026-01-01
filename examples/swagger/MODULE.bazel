@@ -1,0 +1,24 @@
+module(name = "rules_docs_examples_swagger")
+
+bazel_dep(name = "rules_docs")
+
+local_path_override(
+    module_name = "rules_docs",
+    path = "../..",
+)
+
+bazel_dep(name = "rules_python", version = "1.7.0")
+
+# Configure Python and pip dependencies
+pip = use_extension("@rules_python//python/extensions:pip.bzl", "pip")
+pip.parse(
+    hub_name = "mkdocs_deps",
+    python_version = "3.11",
+    requirements_lock = "//:requirements.txt",
+)
+use_repo(pip, "mkdocs_deps")
+
+# Configure docgen with mkdocs plugins
+docgen = use_extension("@rules_docs//docgen:extensions.bzl", "docgen")
+docgen.mkdocs(plugins = ["mkdocs-redoc-tag"], pypi_hub = "@mkdocs_deps")
+use_repo(docgen, "mkdocs")

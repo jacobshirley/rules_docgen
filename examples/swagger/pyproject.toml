@@ -1,0 +1,8 @@
+[project]
+name = "mkdocs-deps"
+classifiers = ["Private :: Do Not Upload"]
+version = "0"
+dependencies = [
+    "mkdocs",
+    "mkdocs-redoc-tag",
+]
