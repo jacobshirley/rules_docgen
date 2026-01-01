@@ -28,6 +28,7 @@ jobs:
           - ${{ github.ref_name }}
           - latest
           - v0
+          - main
     steps:
       - name: Checkout ${{ matrix.version }}
         uses: actions/checkout@8e8c483db84b4bee98b60c0593521ed34d9990e8 # v6
@@ -62,6 +63,7 @@ jobs:
           name: docs-${{ steps.formatted-ref-name.outputs.formatted_ref_name }}
           path: ./docs-html
           retention-days: 1
+          overwrite: true
       - name: Where to find the docs
         run: echo "You can find the documentation for version ${{ matrix.version }} at https://jacobshirley.github.io/rules_docs/${{ steps.formatted-ref-name.outputs.formatted_ref_name }}" >> $GITHUB_STEP_SUMMARY
   combine:
