@@ -37,7 +37,7 @@ bazel_dep(name = "rules_docs", version = "${TAG:1}")
 
 Workspace is not supported. Please use Bzlmod as described above.
 
-## Docs
+## Getting Started
 
 See the [documentation site](https://jacobshirley.github.io/rules_docs) for how to use the rules.
 EOF
