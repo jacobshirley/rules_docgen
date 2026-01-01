@@ -28,7 +28,6 @@ jobs:
           - v0
           - main
           # Add any other refs you want to build docs for here
-    
     steps:
       - name: Checkout ${{ matrix.version }}
         uses: actions/checkout@8e8c483db84b4bee98b60c0593521ed34d9990e8 # v6
