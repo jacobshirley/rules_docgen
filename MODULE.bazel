@@ -17,6 +17,8 @@ bazel_dep(name = "gazelle", version = "0.47.0", dev_dependency = True, repo_name
 bazel_dep(name = "bazel_skylib_gazelle_plugin", version = "1.8.2", dev_dependency = True)
 bazel_dep(name = "buildifier_prebuilt", version = "8.2.1", dev_dependency = True)
 bazel_dep(name = "stardoc", version = "0.8.0", dev_dependency = True)
+bazel_dep(name = "bazel_env.bzl", version = "0.5.0", dev_dependency = True)
+bazel_dep(name = "rules_multitool", version = "1.11.1", dev_dependency = True)
 
 pip = use_extension("@rules_python//python/extensions:pip.bzl", "pip")
 pip.parse(
@@ -39,18 +41,24 @@ docgen.mkdocs(
 )
 use_repo(docgen, "mkdocs")
 
-E2E_FOLDERS = [
-    "git_last_updated",
-    "smoke",
+multitool = use_extension("@rules_multitool//multitool:extension.bzl", "multitool", dev_dependency = True)
+multitool.hub(lockfile = "//tools:tools.lock.json")
+use_repo(multitool, "multitool")
+
+NESTED_MODULES = [
+    "e2e/git_last_updated",
+    "e2e/smoke",
+    "examples/typescript",
 ]
 
 [
     [
-        bazel_dep(name = "rules_docs_e2e_%s" % folder, version = "0.0.0", dev_dependency = True),
+        bazel_dep(name = "rules_docs_%s" % escaped_folder, version = "0.0.0", dev_dependency = True),
         local_path_override(
-            module_name = "rules_docs_e2e_%s" % folder,
-            path = "e2e/%s" % folder,
+            module_name = "rules_docs_%s" % escaped_folder,
+            path = folder,
         ),
     ]
-    for folder in E2E_FOLDERS
+    for folder in NESTED_MODULES
+    for escaped_folder in [folder.replace("/", "_")]
 ]
