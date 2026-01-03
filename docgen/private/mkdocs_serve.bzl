@@ -13,7 +13,7 @@ def _mkdocs_serve_impl(ctx):
 
     inputs = [docs_folder]
 
-    # Write the mkdocs.yml file
+    # Write the mkdocs serve executable file
     ctx.actions.write(
         output = serve_sh,
         content = "\n".join([
