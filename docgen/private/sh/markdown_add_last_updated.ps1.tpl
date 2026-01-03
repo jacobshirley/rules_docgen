@@ -92,8 +92,8 @@ foreach ($arg in $args) {
         Get-ChildItem -Path $longPath -Recurse -File | ForEach-Object {
             # Calculate relative path from the directory
             $relPath = $_.FullName.Substring($longPathResolved.Path.Length).TrimStart('\', '/')
-            # Combine short_path with the relative path
-            $outPath = "$shortPath/$relPath" -replace '\\', '/'
+            # Use just the relative path, ignoring short_path like Unix version
+            $outPath = $relPath -replace '\\', '/'
             Update-File -InputPath $_.FullName -OutputPath $outPath
         }
     }
