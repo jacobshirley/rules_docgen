@@ -2,6 +2,8 @@
 
 Bazel rules for managing documentation and static site generation.
 
+> **Notice:** > _This package is in alpha (< 1.0) and the API may change without notice until it reaches a stable release._
+
 ## Features
 
 -   **Bazel targets**: Manage your documentation as Bazel targets
