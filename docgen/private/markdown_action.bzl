@@ -118,7 +118,7 @@ markdown_action = rule(
             doc = "The title of the markdown document",
         ),
         "file": attr.label(
-            doc = "The file markdown file to modify",
+            doc = "The markdown file to modify",
             allow_single_file = [".md"],
         ),
         "output": attr.string(
