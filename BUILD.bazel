@@ -5,7 +5,7 @@ load("@package_metadata//licenses/rules:license.bzl", "license")
 load("@package_metadata//purl:purl.bzl", "purl")
 load("@package_metadata//rules:package_metadata.bzl", "package_metadata")
 load("@rules_python//python:pip.bzl", "compile_pip_requirements")
-load("//docgen:defs.bzl", "docs", "docs_add_last_updated", "docs_index", "git_last_updated_timestamps")
+load("//docgen:defs.bzl", "docs", "docs_index", "git_last_updated_timestamps", "markdown_add_last_updated")
 
 compile_pip_requirements(
     name = "requirements",
@@ -87,7 +87,7 @@ docs(
     },
 )
 
-docs_add_last_updated(
+markdown_add_last_updated(
     name = "docs_last_updated",
     docs = ":docs",
     last_updated_json = ":git_last_updated_timestamps",

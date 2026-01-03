@@ -60,7 +60,7 @@ git_last_updated_timestamps = rule(
             filter_extensions = ["md", "rst"],
         )
 
-    The output JSON can then be used with docs_add_last_updated to annotate
+    The output JSON can then be used with markdown_add_last_updated to annotate
     documentation files with their modification times.
 
     Note: This rule requires git to be available and the repository to have

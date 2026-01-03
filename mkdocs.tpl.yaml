@@ -50,3 +50,4 @@ markdown_extensions:
       check_paths: true
       base_path:
         - "!relative"
+# Nav will get automatically generated

@@ -51,28 +51,14 @@ for arg in "$@"; do
     # Split argument by colon to get long_path:short_path
     IFS=':' read -r long_path short_path <<< "$arg"
 
-    # Remove first directory component from short_path if it contains a slash
-    if [[ "$short_path" == */* ]]; then
-        short_path="${short_path#*/}"
-    else
-        # If short_path has no slash, it's just the directory name we want to remove
-        short_path=""
-    fi
-
     if [ -d "$long_path" ]; then
         find -L "$long_path" -type f -print0 | while IFS= read -r -d '' f; do
             # Calculate relative path from the directory
             rel_path="${f#$long_path/}"
-            # Remove first directory component from the relative path
-            if [[ "$rel_path" == */* ]]; then
-                rel_path="${rel_path#*/}"
-            fi
-            # Combine short_path with the relative path
-            if [ -n "$short_path" ]; then
-                out_path="$short_path/$rel_path"
-            else
-                out_path="$rel_path"
-            fi
+            out_path="$rel_path"
+
+            echo $out_path
+
             update_file "$f" "$out_path"
         done
     elif [ -f "$long_path" ]; then

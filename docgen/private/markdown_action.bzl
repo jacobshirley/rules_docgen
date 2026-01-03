@@ -23,9 +23,20 @@ def markdown_action_impl(ctx):
     # Build header links
     for key, value in ctx.attr.readme_header_links.items():
         if (DocsLinkInfo in key):
+            link = ""
+            if (key[DocsLinkInfo].entrypoint):
+                link = key[DocsLinkInfo].entrypoint
+            elif (key[DocsLinkInfo].url):
+                link = key[DocsLinkInfo].url
+            else:
+                link = key.label.name
+
+            if (link == None):
+                fail("DocLinkInfo {} has no link".format(key.label.name))
+
             header.append("[**{title}**]({link})".format(
                 title = value if value and value != "" else key[DocsLinkInfo].title,
-                link = key[DocsLinkInfo].url if key[DocsLinkInfo].url else key[DocsLinkInfo].entrypoint if key[DocsLinkInfo].entrypoint else key.label.name,
+                link = link,
             ))
 
             for f in key[DocsLinkInfo].files:

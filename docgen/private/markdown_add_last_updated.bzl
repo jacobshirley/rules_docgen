@@ -2,7 +2,7 @@
 
 load(":providers.bzl", "DocsProviderInfo")
 
-def _docs_add_last_updated_impl(ctx):
+def _markdown_add_last_updated_impl(ctx):
     is_windows = ctx.target_platform_has_constraint(ctx.attr._windows_constraint[platform_common.ConstraintValueInfo])
 
     out_dir = ctx.attr.out_dir or ctx.label.name
@@ -94,7 +94,7 @@ def _docs_add_last_updated_impl(ctx):
         ),
     ]
 
-docs_add_last_updated = rule(
+markdown_add_last_updated = rule(
     doc = """Add "last updated" timestamps to documentation files from git history.
 
     This rule processes documentation files and adds metadata about when each file
@@ -109,7 +109,7 @@ docs_add_last_updated = rule(
             out = "last_updated.json",
         )
 
-        docs_add_last_updated(
+        markdown_add_last_updated(
             name = "docs_with_timestamps",
             docs = ":docs",
             last_updated_json = ":timestamps",
@@ -119,7 +119,7 @@ docs_add_last_updated = rule(
     The updated documentation files will be available in the specified output directory
     and can be used as input to mkdocs_build or mkdocs_serve.
     """,
-    implementation = _docs_add_last_updated_impl,
+    implementation = _markdown_add_last_updated_impl,
     attrs = {
         "last_updated_json": attr.label(
             doc = "JSON file with a key->value mapping of file paths to last updated timestamps",
@@ -143,11 +143,11 @@ docs_add_last_updated = rule(
             doc = "The URL to the update history",
         ),
         "_script_template": attr.label(
-            default = "//docgen/private/sh:docs_add_last_updated.sh.tpl",
+            default = "//docgen/private/sh:markdown_add_last_updated.sh.tpl",
             allow_single_file = True,
         ),
         "_windows_script_template": attr.label(
-            default = "//docgen/private/sh:docs_add_last_updated.ps1.tpl",
+            default = "//docgen/private/sh:markdown_add_last_updated.ps1.tpl",
             allow_single_file = True,
         ),
         "_windows_constraint": attr.label(

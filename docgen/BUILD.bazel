@@ -20,11 +20,11 @@ bzl_library(
     deps = [
         "//docgen/private:docs",
         "//docgen/private:docs_action",
-        "//docgen/private:docs_add_last_updated",
         "//docgen/private:docs_index",
         "//docgen/private:docs_link",
         "//docgen/private:git_last_updated_timestamps",
         "//docgen/private:markdown_action",
+        "//docgen/private:markdown_add_last_updated",
         "//docgen/private:mkdocs_build",
         "//docgen/private:mkdocs_config",
         "//docgen/private:mkdocs_serve",

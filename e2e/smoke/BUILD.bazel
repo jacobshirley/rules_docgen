@@ -43,6 +43,14 @@ docs_index(
 
 docs(
     name = "docs",
+    nav = {
+        ":docs_link": "External Link",  # Custom link text.
+        "other-info.md": "Other Info",  # Link to a local markdown file.
+        ":other_docs": "Other Docs",  # Link to another docs target.
+    },
+    readme_header_links = {
+        ":other_docs": "Internal Link",
+    },
     rewrite_path = "e2e/smoke",
     visibility = ["//visibility:public"],
 )

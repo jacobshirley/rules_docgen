@@ -1,7 +1,28 @@
 """Internal documentation processing actions."""
 
 load("@bazel_lib//lib:copy_to_directory.bzl", "copy_to_directory_bin_action")
+load("@bazel_lib//lib:paths.bzl", "to_repository_relative_path")
 load(":providers.bzl", "DocsLinkInfo", "DocsProviderInfo")
+
+def _correct_repo_name(name):
+    """Corrects the repository name by replacing '+' with ''.
+
+    Args:
+        name: The original repository name.
+
+    Returns:
+        The corrected repository name.
+    """
+    return name.replace("+", "")
+
+def _join_path(current, new_path):
+    if (new_path == ""):
+        return current
+
+    if (current == ""):
+        return new_path
+    else:
+        return current + "/" + new_path
 
 def docs_action_impl(ctx):
     """Implementation function for docs_action rule.
@@ -17,51 +38,78 @@ def docs_action_impl(ctx):
 
     copy_to_directory_bin = ctx.toolchains["@bazel_lib//lib:copy_to_directory_toolchain_type"].copy_to_directory_info.bin
 
+    path = ctx.attr.rewrite_path or ""
+
     out_dir = ctx.attr.out or ctx.label.name
     outs = []
     files = [ctx.file.entrypoint] if ctx.file.entrypoint else []
-    entrypoint_file_path = ctx.file.entrypoint.short_path if ctx.file.entrypoint else None
+    entrypoint_file_path = to_repository_relative_path(ctx.file.entrypoint) if ctx.file.entrypoint else None
+
     resolved_nav = []
+    repo_name = _correct_repo_name(ctx.label.repo_name)
 
     for key, value in ctx.attr.nav.items():
         nav_element = {}
+        nav_repo_name = _correct_repo_name(key.label.repo_name)
+
+        subpath = path
+        title = ""
+        entrypoint = ""
+        subnav = []
+        is_external = False
 
         if (DocsProviderInfo in key):
             title = value if value and value != "" else key[DocsProviderInfo].title
-            entrypoint = key[DocsProviderInfo].entrypoint
-            subnav = key[DocsProviderInfo].nav
+            _subpath = key[DocsProviderInfo].path
 
-            if (len(subnav) > 0):
-                nav_element[title] = ([entrypoint] if entrypoint else []) + subnav
-            elif (entrypoint):
-                nav_element[title] = entrypoint
-            else:
-                nav_element[title] = key.label.name
+            if (_subpath == "" and nav_repo_name != "" and nav_repo_name != repo_name):
+                _subpath = nav_repo_name
+
+            _entrypoint = key[DocsProviderInfo].entrypoint
+            _subnav = key[DocsProviderInfo].nav
+
+            subpath = _join_path(subpath, _subpath)
+
+            if (len(_subnav) > 0):
+                subnav = _subnav
+
+            if (_entrypoint):
+                entrypoint = _entrypoint
         elif (DocsLinkInfo in key):
+            is_external = True
             title = value if value and value != "" else key[DocsLinkInfo].title
-            nav_element[title] = key[DocsLinkInfo].url if key[DocsLinkInfo].url != "" else key[DocsLinkInfo].entrypoint if key[DocsLinkInfo].entrypoint != "" else key.label.name
+            entrypoint = key[DocsLinkInfo].url if key[DocsLinkInfo].url != "" else key[DocsLinkInfo].entrypoint if key[DocsLinkInfo].entrypoint != "" else key.label.name
         else:
-            nav_element[value] = key.files.to_list()[0].short_path
+            title = value if value and value != "" else key.label.name
+            entrypoint = to_repository_relative_path(key.files.to_list()[0])
+
+        if (entrypoint):
+            nav_element[title] = _join_path(subpath, entrypoint) if not is_external else entrypoint
+
+        if (len(subnav) > 0):
+            nav_element[title] = ([nav_element[title]] if entrypoint else []) + subnav
 
         resolved_nav.append(nav_element)
-        repo_name = ""
+        nav_path = ""
 
         if (DocsProviderInfo in key):
             other_files = key[DocsProviderInfo].files
-            repo_name = key[DocsProviderInfo].path
+            nav_path = key[DocsProviderInfo].path
         elif (DocsLinkInfo in key):
             other_files = key[DocsLinkInfo].files
-            repo_name = key[DocsLinkInfo].path
+            nav_path = key[DocsLinkInfo].path
         else:
             other_files = key.files.to_list()
 
-        if (repo_name != "" and repo_name != ctx.label.repo_name.replace("+", "")):
-            out_folder = ctx.actions.declare_directory(repo_name)
+        nav_path = nav_path or nav_repo_name
+
+        if (nav_path != "" and nav_path != repo_name):
+            out_folder = ctx.actions.declare_directory(nav_path)
 
             copy_to_directory_bin_action(
                 ctx = ctx,
                 copy_to_directory_bin = copy_to_directory_bin,
-                name = "_" + repo_name,
+                name = "_" + nav_repo_name,
                 files = other_files,
                 dst = out_folder,
                 include_external_repositories = ["*"],
@@ -92,7 +140,7 @@ def docs_action_impl(ctx):
             files = depset(outs),
         ),
         DocsProviderInfo(
-            path = ctx.attr.rewrite_path or ctx.label.repo_name.replace("+", ""),
+            path = path,
             title = ctx.attr.title,
             files = files,
             entrypoint = entrypoint_file_path if entrypoint_file_path else None,
@@ -100,7 +148,7 @@ def docs_action_impl(ctx):
             out_dir = out_dir,
         ),
         DocsLinkInfo(
-            path = ctx.attr.rewrite_path or ctx.label.repo_name.replace("+", ""),
+            path = path,
             title = ctx.attr.title,
             files = files,
             entrypoint = entrypoint_file_path if entrypoint_file_path else None,

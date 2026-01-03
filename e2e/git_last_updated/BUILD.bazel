@@ -1,12 +1,11 @@
 """Tests for git_last_updated_timestamps rule."""
 
 load("@bazel_lib//lib:diff_test.bzl", "diff_test")
-load("@rules_docs//docgen:defs.bzl", "docs", "docs_add_last_updated", "git_last_updated_timestamps")
+load("@rules_docs//docgen:defs.bzl", "docs", "git_last_updated_timestamps", "markdown_add_last_updated")
 
 docs(
     name = "docs",
     srcs = ["README.md"],
-    rewrite_path = "e2e/git_last_updated",
     visibility = ["//visibility:public"],
 )
 
@@ -30,7 +29,7 @@ diff_test(
     file2 = "golden-last_updated.json",
 )
 
-docs_add_last_updated(
+markdown_add_last_updated(
     name = "docs_with_last_updated",
     docs = ":test_docs",
     last_updated_json = ":git_last_updated_timestamps",
