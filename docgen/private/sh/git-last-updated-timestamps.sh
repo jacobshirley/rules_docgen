@@ -53,53 +53,65 @@ if [ -d "$GIT_DIR" ]; then
 fi
 
 # Get all modifications with dates, keep only the latest for each file (case-insensitive)
-RESULT=$(git log --name-status --pretty=format:"DATE:%cI" --all |
-	awk -v exts="$FILTER_EXTENSIONS" '
-BEGIN {
-    FS = "\t"
-    current_date = ""
-    # Split extensions by comma and build regex pattern
-    split(exts, ext_array, ",")
-    pattern = ""
-    for (i in ext_array) {
-        if (pattern != "") pattern = pattern "|"
-        pattern = pattern "\\." ext_array[i] "$"
-    }
-}
-/^DATE:/ {
-    current_date = substr($0, 6)  # Remove "DATE:" prefix
-    # Normalize timezone format: replace +00:00 with Z for consistency across platforms
-    gsub(/\+00:00$/, "Z", current_date)
-    next
-}
-/^[AMD]/ {
-    file = $2
-    if (tolower(file) ~ pattern && current_date != "" && !(file in files)) {
-        files[file] = current_date
-    }
-}
-END {
-    print "{"
-    count = 0
-    for (file in files) {
-        count++
-    }
-    i = 0
-    for (file in files) {
-        i++
-        printf "  \"%s\": \"%s\"", file, files[file]
-        if (i < count) {
-            printf ","
-        }
-        printf "\n"
-    }
-    print "}"
-}')
+temp_file=$(mktemp)
+current_date=""
+
+# Convert extensions to a pattern for case matching
+IFS=',' read -ra EXT_ARRAY <<< "$FILTER_EXTENSIONS"
+
+# Process git log output line by line using process substitution to avoid subshell
+while IFS=$'\t' read -r status file; do
+    if [[ "$status" =~ ^DATE: ]]; then
+        current_date="${status#DATE:}"
+        # Normalize timezone format: replace +00:00 with Z for consistency across platforms
+        current_date="${current_date/+00:00/Z}"
+    elif [[ "$status" =~ ^[AMD] ]] && [ -n "$current_date" ] && [ -n "$file" ]; then
+        # Check if file matches any of the extensions (case-insensitive)
+        file_lower=$(echo "$file" | tr '[:upper:]' '[:lower:]')
+        match=false
+        for ext in "${EXT_ARRAY[@]}"; do
+            if [[ "$file_lower" == *".$ext" ]]; then
+                match=true
+                break
+            fi
+        done
+
+        # Only add if it matches extension and we haven't seen this file yet
+        if [ "$match" = true ]; then
+            # Check if we've already seen this file
+            if ! grep -Fq "$file" "$temp_file"; then
+                echo "$file|$current_date" >> "$temp_file"
+            fi
+        fi
+    fi
+done < <(git log --name-status --pretty=format:"DATE:%cI" --all)
+
+# Generate JSON output from temp file
+result_json="{"
+first_entry=true
+
+while IFS='|' read -r file timestamp; do
+    if [ -n "$file" ] && [ -n "$timestamp" ]; then
+        if [ "$first_entry" = false ]; then
+            result_json+=","
+        fi
+        result_json+=$(printf '\n  "%s": "%s"' "$file" "$timestamp")
+        first_entry=false
+    fi
+done < "$temp_file"
+
+if [ "$first_entry" = false ]; then
+    result_json+=$'\n'
+fi
+result_json+="}"
+
+# Clean up temp file
+rm -f "$temp_file"
 
 # Output result to file or stdout
 if [ -n "$OUTPUT_FILE" ]; then
-	echo "$RESULT" > "$OUTPUT_FILE"
+	echo "$result_json" > "$OUTPUT_FILE"
 	echo "Timestamps written to $OUTPUT_FILE" >&2
 else
-	echo "$RESULT"
+	echo "$result_json"
 fi
