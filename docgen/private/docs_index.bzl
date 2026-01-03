@@ -32,5 +32,6 @@ def docs_index(
         title = title,
         entry = entry,
         nav = nav,
+        is_index = True,
         **kwargs
     )

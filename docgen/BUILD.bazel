@@ -67,7 +67,6 @@ stardoc(
 
 docs(
     name = "docs",
-    srcs = [":defs_md"],
     nav = {
         ":defs.md": "@rules_docs//docgen:defs.bzl",
         ":extensions.md": "@rules_docs//docgen:extensions.bzl",

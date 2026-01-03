@@ -111,6 +111,7 @@ bzl_library(
     deps = [
         ":providers",
         "@bazel_lib//lib:copy_to_directory",
+        "@bazel_lib//lib:directory_path",
         "@bazel_lib//lib:paths",
     ],
 )

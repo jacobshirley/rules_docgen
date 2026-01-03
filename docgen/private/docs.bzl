@@ -3,7 +3,6 @@
 load("@bazel_lib//lib:utils.bzl", "file_exists")
 load("@bazel_skylib//rules:build_test.bzl", "build_test")
 load(":docs_action.bzl", "docs_action")
-load(":utils.bzl", "UNIQUE_FOLDER_NAME")
 
 def docs(
         name = "docs",
@@ -43,7 +42,7 @@ def docs(
         readme_header_links: Dictionary of links to add to the README header. Format same as nav.
         **kwargs: Additional arguments passed to the underlying docs_action rule.
     """
-    out_folder = (out or name) + "/" + UNIQUE_FOLDER_NAME + "/" + native.package_name()
+    out_folder = (out or name) + "/"
 
     valid_target = (file_exists(entry) or entry.find(":") != -1) if entry else False
 
