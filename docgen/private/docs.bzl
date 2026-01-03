@@ -8,9 +8,7 @@ load(":markdown_action.bzl", "markdown_action")
 def docs(
         name = "docs",
         entrypoint = "README.md",
-        srcs = [
-            "README.md",
-        ],
+        srcs = [],
         data = [],
         deps = [],
         title = None,

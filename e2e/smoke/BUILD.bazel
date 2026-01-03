@@ -25,6 +25,7 @@ docs_link(
 
 docs(
     name = "other_docs",
+    data = ["extra_data.txt"],
     entrypoint = "other-info-2.md",
     readme_content = "This is some other documentation content.",
     readme_header_links = {

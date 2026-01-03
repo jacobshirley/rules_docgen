@@ -43,6 +43,8 @@ def docs_action_impl(ctx):
     out_dir = ctx.attr.out or ctx.label.name
     outs = []
     files = [ctx.file.entrypoint] if ctx.file.entrypoint else []
+    files += ctx.files.srcs + ctx.files.data
+
     entrypoint_file_path = to_repository_relative_path(ctx.file.entrypoint) if ctx.file.entrypoint else None
 
     resolved_nav = []
@@ -172,11 +174,12 @@ docs_action = rule(
             doc = "The files that are part of the documentation",
             allow_files = True,
         ),
-        "out": attr.string(
-            doc = "The output directory for the documentation",
-        ),
         "data": attr.label_list(
             doc = "The data files that are part of the documentation",
+            allow_files = True,
+        ),
+        "out": attr.string(
+            doc = "The output directory for the documentation",
         ),
         "deps": attr.label_list(
             doc = "The dependencies of the documentation",
