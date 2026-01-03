@@ -5,7 +5,7 @@ load("//docgen/private:docs_action.bzl", _docs_action = "docs_action", _docs_act
 load("//docgen/private:docs_index.bzl", _docs_index = "docs_index")
 load("//docgen/private:docs_link.bzl", _docs_link = "docs_link")
 load("//docgen/private:git_last_updated_timestamps.bzl", _git_last_updated_timestamps = "git_last_updated_timestamps")
-load("//docgen/private:markdown_action.bzl", _markdown_action = "markdown_action")
+load("//docgen/private:markdown_action.bzl", _markdown_action = "markdown_action", _markdown_action_impl = "markdown_action_impl")
 load("//docgen/private:markdown_add_last_updated.bzl", _markdown_add_last_updated = "markdown_add_last_updated")
 load("//docgen/private:mkdocs_build.bzl", _mkdocs_build = "mkdocs_build")
 load("//docgen/private:mkdocs_config.bzl", _mkdocs_config = "mkdocs_config")
@@ -19,6 +19,7 @@ docs_index = _docs_index
 docs_link = _docs_link
 markdown_add_last_updated = _markdown_add_last_updated
 markdown_action = _markdown_action
+markdown_action_impl = _markdown_action_impl
 mkdocs_build = _mkdocs_build
 mkdocs_config = _mkdocs_config
 mkdocs_serve = _mkdocs_serve

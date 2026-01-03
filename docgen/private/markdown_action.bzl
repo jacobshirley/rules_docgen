@@ -6,7 +6,7 @@ load(":providers.bzl", "DocsLinkInfo", "MarkdownInfo")
 def markdown_action_impl(ctx):
     """Implementation function for markdown_action rule.
 
-    Processes markdown files with header links and custom content.
+    Modifies markdown files with header links and custom content.
 
     Args:
         ctx: The rule context.
@@ -111,7 +111,7 @@ def markdown_action_impl(ctx):
 markdown_action = rule(
     implementation = markdown_action_impl,
     doc = """
-    Processes markdown files with header links and custom content generation.
+    Modifies markdown files with header links and custom content generation.
     """,
     attrs = {
         "title": attr.string(
