@@ -1,0 +1,25 @@
+{
+  "entryPoints": ["src/taskmanager/index.ts"],
+  "out": "docs",
+  "name": "Task Management API",
+  "readme": "README.md",
+  "includeVersion": true,
+  "excludePrivate": true,
+  "excludeProtected": true,
+  "excludeExternals": true,
+  "theme": "default",
+  "categorizeByGroup": true,
+  "categoryOrder": [
+    "Classes",
+    "Interfaces",
+    "Enumerations",
+    "Functions",
+    "Variables"
+  ],
+  "searchInComments": true,
+  "navigation": {
+    "includeCategories": true,
+    "includeGroups": true
+  }
+}
+

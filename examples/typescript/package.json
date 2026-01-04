@@ -1,0 +1,28 @@
+{
+  "name": "taskmanager",
+  "version": "1.0.0",
+  "description": "Task Management API with comprehensive TypeDoc documentation",
+  "main": "dist/taskmanager/index.js",
+  "types": "dist/taskmanager/index.d.ts",
+  "scripts": {
+    "build": "tsc",
+    "docs": "typedoc",
+    "docs:serve": "typedoc --watch"
+  },
+  "keywords": [
+    "task",
+    "management",
+    "api",
+    "typescript",
+    "typedoc"
+  ],
+  "author": "API Team",
+  "license": "MIT",
+  "devDependencies": {
+    "typescript": "^5.4.0",
+    "typedoc": "^0.28.15"
+  },
+  "pnpm": {
+    "onlyBuiltDependencies": []
+  }
+}
