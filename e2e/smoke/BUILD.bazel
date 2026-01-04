@@ -54,6 +54,7 @@ docs(
         ":other_docs": "Internal Link",
     },
     rewrite_path = "e2e/smoke",
+    title = "Smoke Test Docs",
     visibility = ["//visibility:public"],
 )
 

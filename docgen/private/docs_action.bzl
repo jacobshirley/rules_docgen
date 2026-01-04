@@ -52,25 +52,30 @@ def docs_action_impl(ctx):
 
     for key, value in ctx.attr.nav.items():
         nav_element = {}
+
+        # This is all a bit ugly. Essentially what we're trying to do is:
+        # 1. Determine the repository name of the target providing the nav element
+        # 2. Allow the user to override the path with rewrite_path
+        # 3. Build the correct path to the entrypoint
         nav_repo_name = _correct_repo_name(key.label.repo_name)
 
-        subpath = path
+        _subpath = ""
         title = ""
+        subtitle = ""
         entrypoint = ""
         subnav = []
         is_external = False
 
         if (DocsProviderInfo in key):
             title = value if value and value != "" else key[DocsProviderInfo].title
+            subtitle = key[DocsProviderInfo].title
             _subpath = key[DocsProviderInfo].path
 
-            if (_subpath == "" and nav_repo_name != "" and nav_repo_name != repo_name):
-                _subpath = nav_repo_name
+            if (nav_repo_name != repo_name):
+                _subpath = _subpath or nav_repo_name
 
             _entrypoint = key[DocsProviderInfo].entrypoint
             _subnav = key[DocsProviderInfo].nav
-
-            subpath = _join_path(subpath, _subpath)
 
             if (len(_subnav) > 0):
                 subnav = _subnav
@@ -84,12 +89,17 @@ def docs_action_impl(ctx):
         else:
             title = value if value and value != "" else key.label.name
             entrypoint = to_repository_relative_path(key.files.to_list()[0])
+        subpath = _join_path(path or repo_name, _subpath)
 
         if (entrypoint):
             nav_element[title] = _join_path(subpath, entrypoint) if not is_external else entrypoint
 
         if (len(subnav) > 0):
-            nav_element[title] = ([nav_element[title]] if entrypoint else []) + subnav
+            nav_element_main = {}
+            if (entrypoint):
+                nav_element_main[subtitle] = nav_element[title]
+
+            nav_element[title] = ([nav_element_main] if entrypoint else []) + subnav
 
         resolved_nav.append(nav_element)
         nav_path = ""
@@ -143,7 +153,7 @@ def docs_action_impl(ctx):
         ),
         DocsProviderInfo(
             path = path,
-            title = ctx.attr.title,
+            title = ctx.attr.title or ctx.label.name,
             files = files,
             entrypoint = entrypoint_file_path if entrypoint_file_path else None,
             nav = resolved_nav,
