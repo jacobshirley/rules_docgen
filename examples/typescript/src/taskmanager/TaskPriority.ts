@@ -39,7 +39,7 @@ export enum TaskPriority {
      * Tasks with this priority are not time-sensitive and can be completed
      * when there are no higher priority tasks remaining.
      */
-    LOW = "low",
+    LOW = 'low',
 
     /**
      * Medium priority - normal priority, should be completed in due course.
@@ -47,7 +47,7 @@ export enum TaskPriority {
      * This is the default priority for most tasks. Tasks with this priority
      * should be completed as part of the normal workflow.
      */
-    MEDIUM = "medium",
+    MEDIUM = 'medium',
 
     /**
      * High priority - important, should be prioritized.
@@ -55,7 +55,7 @@ export enum TaskPriority {
      * Tasks with this priority are important and should be completed before
      * medium and low priority tasks.
      */
-    HIGH = "high",
+    HIGH = 'high',
 
     /**
      * Urgent priority - critical, requires immediate attention.
@@ -63,6 +63,5 @@ export enum TaskPriority {
      * Tasks with this priority are critical and require immediate attention.
      * These should be worked on before all other tasks.
      */
-    URGENT = "urgent",
+    URGENT = 'urgent',
 }
-

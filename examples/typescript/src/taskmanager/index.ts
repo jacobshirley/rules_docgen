@@ -30,9 +30,8 @@
  * @packageDocumentation
  */
 
-export { Task } from './Task';
-export { TaskStatus } from './TaskStatus';
-export { TaskPriority } from './TaskPriority';
-export { TaskService } from './TaskService';
-export { InMemoryTaskService } from './InMemoryTaskService';
-
+export { Task } from './Task'
+export { TaskStatus } from './TaskStatus'
+export { TaskPriority } from './TaskPriority'
+export { TaskService } from './TaskService'
+export { InMemoryTaskService } from './InMemoryTaskService'

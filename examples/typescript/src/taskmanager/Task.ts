@@ -1,5 +1,5 @@
-import { TaskPriority } from './TaskPriority';
-import { TaskStatus } from './TaskStatus';
+import { TaskPriority } from './TaskPriority'
+import { TaskStatus } from './TaskStatus'
 
 /**
  * Represents a task in the task management system.
@@ -31,52 +31,52 @@ export class Task {
     /**
      * Unique identifier for the task.
      */
-    public readonly id: string;
+    public readonly id: string
 
     /**
      * A brief, descriptive title for the task (1-200 characters).
      */
-    public readonly title: string;
+    public readonly title: string
 
     /**
      * Detailed description of what needs to be done (up to 5000 characters).
      */
-    public readonly description: string;
+    public readonly description: string
 
     /**
      * The current status of the task.
      */
-    public readonly status: TaskStatus;
+    public readonly status: TaskStatus
 
     /**
      * The priority level of the task.
      */
-    public readonly priority: TaskPriority;
+    public readonly priority: TaskPriority
 
     /**
      * The ID of the user assigned to this task, or undefined if unassigned.
      */
-    public readonly assignedTo?: string;
+    public readonly assignedTo?: string
 
     /**
      * The ID of the project this task belongs to, or undefined if not associated with a project.
      */
-    public readonly projectId?: string;
+    public readonly projectId?: string
 
     /**
      * Target completion date and time for the task, or undefined if no due date is set.
      */
-    public readonly dueDate?: Date;
+    public readonly dueDate?: Date
 
     /**
      * Timestamp when the task was created.
      */
-    public readonly createdAt: Date;
+    public readonly createdAt: Date
 
     /**
      * Timestamp when the task was last updated.
      */
-    public readonly updatedAt: Date;
+    public readonly updatedAt: Date
 
     /**
      * Creates a new task with the specified parameters.
@@ -116,37 +116,37 @@ export class Task {
      * ```
      */
     constructor(options: {
-        id?: string;
-        title: string;
-        description: string;
-        status?: TaskStatus;
-        priority?: TaskPriority;
-        assignedTo?: string;
-        projectId?: string;
-        dueDate?: Date;
-        createdAt?: Date;
-        updatedAt?: Date;
+        id?: string
+        title: string
+        description: string
+        status?: TaskStatus
+        priority?: TaskPriority
+        assignedTo?: string
+        projectId?: string
+        dueDate?: Date
+        createdAt?: Date
+        updatedAt?: Date
     }) {
         if (!options.title || !options.title.trim()) {
-            throw new Error("Title must not be empty");
+            throw new Error('Title must not be empty')
         }
         if (options.title.length > 200) {
-            throw new Error("Title must not exceed 200 characters");
+            throw new Error('Title must not exceed 200 characters')
         }
         if (options.description.length > 5000) {
-            throw new Error("Description must not exceed 5000 characters");
+            throw new Error('Description must not exceed 5000 characters')
         }
 
-        this.id = options.id || this.generateId();
-        this.title = options.title;
-        this.description = options.description;
-        this.status = options.status ?? TaskStatus.PENDING;
-        this.priority = options.priority ?? TaskPriority.MEDIUM;
-        this.assignedTo = options.assignedTo;
-        this.projectId = options.projectId;
-        this.dueDate = options.dueDate;
-        this.createdAt = options.createdAt ?? new Date();
-        this.updatedAt = options.updatedAt ?? this.createdAt;
+        this.id = options.id || this.generateId()
+        this.title = options.title
+        this.description = options.description
+        this.status = options.status ?? TaskStatus.PENDING
+        this.priority = options.priority ?? TaskPriority.MEDIUM
+        this.assignedTo = options.assignedTo
+        this.projectId = options.projectId
+        this.dueDate = options.dueDate
+        this.createdAt = options.createdAt ?? new Date()
+        this.updatedAt = options.updatedAt ?? this.createdAt
     }
 
     /**
@@ -168,7 +168,7 @@ export class Task {
      * ```
      */
     public isAssigned(): boolean {
-        return this.assignedTo !== undefined;
+        return this.assignedTo !== undefined
     }
 
     /**
@@ -195,12 +195,15 @@ export class Task {
      */
     public isOverdue(): boolean {
         if (!this.dueDate) {
-            return false;
+            return false
         }
-        if (this.status === TaskStatus.COMPLETED || this.status === TaskStatus.CANCELLED) {
-            return false;
+        if (
+            this.status === TaskStatus.COMPLETED ||
+            this.status === TaskStatus.CANCELLED
+        ) {
+            return false
         }
-        return this.dueDate < new Date();
+        return this.dueDate < new Date()
     }
 
     /**
@@ -219,7 +222,7 @@ export class Task {
      * ```
      */
     public isCompleted(): boolean {
-        return this.status === TaskStatus.COMPLETED;
+        return this.status === TaskStatus.COMPLETED
     }
 
     /**
@@ -250,7 +253,7 @@ export class Task {
             dueDate: this.dueDate,
             createdAt: this.createdAt,
             updatedAt: new Date(),
-        });
+        })
     }
 
     /**
@@ -278,7 +281,7 @@ export class Task {
             dueDate: this.dueDate,
             createdAt: this.createdAt,
             updatedAt: new Date(),
-        });
+        })
     }
 
     /**
@@ -287,16 +290,15 @@ export class Task {
      * @returns A string containing the task ID, title, status, and priority.
      */
     public toString(): string {
-        return `Task[id=${this.id}, title=${this.title}, status=${this.status}, priority=${this.priority}]`;
+        return `Task[id=${this.id}, title=${this.title}, status=${this.status}, priority=${this.priority}]`
     }
 
     private generateId(): string {
         // Simple UUID v4 generator for demo purposes
         return 'xxxxxxxx-xxxx-4xxx-yxxx-xxxxxxxxxxxx'.replace(/[xy]/g, (c) => {
-            const r = (Math.random() * 16) | 0;
-            const v = c === 'x' ? r : (r & 0x3) | 0x8;
-            return v.toString(16);
-        });
+            const r = (Math.random() * 16) | 0
+            const v = c === 'x' ? r : (r & 0x3) | 0x8
+            return v.toString(16)
+        })
     }
 }
-

@@ -1,7 +1,7 @@
-import { Task } from './Task';
-import { TaskPriority } from './TaskPriority';
-import { TaskStatus } from './TaskStatus';
-import { TaskService } from './TaskService';
+import { Task } from './Task'
+import { TaskPriority } from './TaskPriority'
+import { TaskStatus } from './TaskStatus'
+import { TaskService } from './TaskService'
 
 /**
  * A simple in-memory implementation of {@link TaskService}.
@@ -26,7 +26,7 @@ import { TaskService } from './TaskService';
  * @public
  */
 export class InMemoryTaskService implements TaskService {
-    private readonly tasks: Map<string, Task> = new Map();
+    private readonly tasks: Map<string, Task> = new Map()
 
     /**
      * Creates a new InMemoryTaskService instance.
@@ -38,7 +38,7 @@ export class InMemoryTaskService implements TaskService {
     /** @inheritdoc */
     public createTask(task: Task): Task {
         if (!task) {
-            throw new Error("Task must not be null or undefined");
+            throw new Error('Task must not be null or undefined')
         }
 
         // Create a new task with a fresh ID and timestamps
@@ -50,28 +50,28 @@ export class InMemoryTaskService implements TaskService {
             assignedTo: task.assignedTo,
             projectId: task.projectId,
             dueDate: task.dueDate,
-        });
+        })
 
-        this.tasks.set(newTask.id, newTask);
-        return newTask;
+        this.tasks.set(newTask.id, newTask)
+        return newTask
     }
 
     /** @inheritdoc */
     public getTaskById(taskId: string): Task | undefined {
         if (!taskId) {
-            throw new Error("Task ID must not be null or undefined");
+            throw new Error('Task ID must not be null or undefined')
         }
-        return this.tasks.get(taskId);
+        return this.tasks.get(taskId)
     }
 
     /** @inheritdoc */
     public updateTask(task: Task): Task {
         if (!task) {
-            throw new Error("Task must not be null or undefined");
+            throw new Error('Task must not be null or undefined')
         }
 
         if (!this.tasks.has(task.id)) {
-            throw new Error(`Task with ID ${task.id} does not exist`);
+            throw new Error(`Task with ID ${task.id} does not exist`)
         }
 
         // Create updated task with new timestamp
@@ -86,62 +86,62 @@ export class InMemoryTaskService implements TaskService {
             dueDate: task.dueDate,
             createdAt: task.createdAt,
             updatedAt: new Date(),
-        });
+        })
 
-        this.tasks.set(task.id, updatedTask);
-        return updatedTask;
+        this.tasks.set(task.id, updatedTask)
+        return updatedTask
     }
 
     /** @inheritdoc */
     public updateTaskStatus(taskId: string, newStatus: TaskStatus): Task {
         if (!taskId) {
-            throw new Error("Task ID must not be null or undefined");
+            throw new Error('Task ID must not be null or undefined')
         }
         if (!newStatus) {
-            throw new Error("Status must not be null or undefined");
+            throw new Error('Status must not be null or undefined')
         }
 
-        const task = this.tasks.get(taskId);
+        const task = this.tasks.get(taskId)
         if (!task) {
-            throw new Error(`Task with ID ${taskId} does not exist`);
+            throw new Error(`Task with ID ${taskId} does not exist`)
         }
 
-        const updatedTask = task.withStatus(newStatus);
-        this.tasks.set(taskId, updatedTask);
-        return updatedTask;
+        const updatedTask = task.withStatus(newStatus)
+        this.tasks.set(taskId, updatedTask)
+        return updatedTask
     }
 
     /** @inheritdoc */
     public updateTaskPriority(taskId: string, newPriority: TaskPriority): Task {
         if (!taskId) {
-            throw new Error("Task ID must not be null or undefined");
+            throw new Error('Task ID must not be null or undefined')
         }
         if (!newPriority) {
-            throw new Error("Priority must not be null or undefined");
+            throw new Error('Priority must not be null or undefined')
         }
 
-        const task = this.tasks.get(taskId);
+        const task = this.tasks.get(taskId)
         if (!task) {
-            throw new Error(`Task with ID ${taskId} does not exist`);
+            throw new Error(`Task with ID ${taskId} does not exist`)
         }
 
-        const updatedTask = task.withPriority(newPriority);
-        this.tasks.set(taskId, updatedTask);
-        return updatedTask;
+        const updatedTask = task.withPriority(newPriority)
+        this.tasks.set(taskId, updatedTask)
+        return updatedTask
     }
 
     /** @inheritdoc */
     public assignTask(taskId: string, userId: string): Task {
         if (!taskId) {
-            throw new Error("Task ID must not be null or undefined");
+            throw new Error('Task ID must not be null or undefined')
         }
         if (!userId) {
-            throw new Error("User ID must not be null or undefined");
+            throw new Error('User ID must not be null or undefined')
         }
 
-        const task = this.tasks.get(taskId);
+        const task = this.tasks.get(taskId)
         if (!task) {
-            throw new Error(`Task with ID ${taskId} does not exist`);
+            throw new Error(`Task with ID ${taskId} does not exist`)
         }
 
         const updatedTask = new Task({
@@ -155,21 +155,21 @@ export class InMemoryTaskService implements TaskService {
             dueDate: task.dueDate,
             createdAt: task.createdAt,
             updatedAt: new Date(),
-        });
+        })
 
-        this.tasks.set(taskId, updatedTask);
-        return updatedTask;
+        this.tasks.set(taskId, updatedTask)
+        return updatedTask
     }
 
     /** @inheritdoc */
     public unassignTask(taskId: string): Task {
         if (!taskId) {
-            throw new Error("Task ID must not be null or undefined");
+            throw new Error('Task ID must not be null or undefined')
         }
 
-        const task = this.tasks.get(taskId);
+        const task = this.tasks.get(taskId)
         if (!task) {
-            throw new Error(`Task with ID ${taskId} does not exist`);
+            throw new Error(`Task with ID ${taskId} does not exist`)
         }
 
         const updatedTask = new Task({
@@ -183,93 +183,104 @@ export class InMemoryTaskService implements TaskService {
             dueDate: task.dueDate,
             createdAt: task.createdAt,
             updatedAt: new Date(),
-        });
+        })
 
-        this.tasks.set(taskId, updatedTask);
-        return updatedTask;
+        this.tasks.set(taskId, updatedTask)
+        return updatedTask
     }
 
     /** @inheritdoc */
     public deleteTask(taskId: string): boolean {
         if (!taskId) {
-            throw new Error("Task ID must not be null or undefined");
+            throw new Error('Task ID must not be null or undefined')
         }
-        return this.tasks.delete(taskId);
+        return this.tasks.delete(taskId)
     }
 
     /** @inheritdoc */
     public getAllTasks(): Task[] {
-        return Array.from(this.tasks.values());
+        return Array.from(this.tasks.values())
     }
 
     /** @inheritdoc */
     public findTasks(page: number = 0, pageSize: number = 20): Task[] {
         if (page < 0) {
-            throw new Error("Page must be non-negative");
+            throw new Error('Page must be non-negative')
         }
         if (pageSize <= 0) {
-            throw new Error("Page size must be positive");
+            throw new Error('Page size must be positive')
         }
 
-        const allTasks = Array.from(this.tasks.values());
-        const start = page * pageSize;
-        const end = Math.min(start + pageSize, allTasks.length);
+        const allTasks = Array.from(this.tasks.values())
+        const start = page * pageSize
+        const end = Math.min(start + pageSize, allTasks.length)
 
         if (start >= allTasks.length) {
-            return [];
+            return []
         }
 
-        return allTasks.slice(start, end);
+        return allTasks.slice(start, end)
     }
 
     /** @inheritdoc */
     public findTasksByStatus(status: TaskStatus): Task[] {
         if (!status) {
-            throw new Error("Status must not be null or undefined");
+            throw new Error('Status must not be null or undefined')
         }
-        return Array.from(this.tasks.values()).filter((task) => task.status === status);
+        return Array.from(this.tasks.values()).filter(
+            (task) => task.status === status,
+        )
     }
 
     /** @inheritdoc */
     public findTasksByPriority(priority: TaskPriority): Task[] {
         if (!priority) {
-            throw new Error("Priority must not be null or undefined");
+            throw new Error('Priority must not be null or undefined')
         }
-        return Array.from(this.tasks.values()).filter((task) => task.priority === priority);
+        return Array.from(this.tasks.values()).filter(
+            (task) => task.priority === priority,
+        )
     }
 
     /** @inheritdoc */
     public findTasksByAssignedUser(userId: string): Task[] {
         if (!userId) {
-            throw new Error("User ID must not be null or undefined");
+            throw new Error('User ID must not be null or undefined')
         }
-        return Array.from(this.tasks.values()).filter((task) => task.assignedTo === userId);
+        return Array.from(this.tasks.values()).filter(
+            (task) => task.assignedTo === userId,
+        )
     }
 
     /** @inheritdoc */
     public findTasksByProject(projectId: string): Task[] {
         if (!projectId) {
-            throw new Error("Project ID must not be null or undefined");
+            throw new Error('Project ID must not be null or undefined')
         }
-        return Array.from(this.tasks.values()).filter((task) => task.projectId === projectId);
+        return Array.from(this.tasks.values()).filter(
+            (task) => task.projectId === projectId,
+        )
     }
 
     /** @inheritdoc */
     public findOverdueTasks(): Task[] {
-        return Array.from(this.tasks.values()).filter((task) => task.isOverdue());
+        return Array.from(this.tasks.values()).filter((task) =>
+            task.isOverdue(),
+        )
     }
 
     /** @inheritdoc */
     public countTasks(): number {
-        return this.tasks.size;
+        return this.tasks.size
     }
 
     /** @inheritdoc */
     public countTasksByStatus(status: TaskStatus): number {
         if (!status) {
-            throw new Error("Status must not be null or undefined");
+            throw new Error('Status must not be null or undefined')
         }
-        return Array.from(this.tasks.values()).filter((task) => task.status === status).length;
+        return Array.from(this.tasks.values()).filter(
+            (task) => task.status === status,
+        ).length
     }
 }
-

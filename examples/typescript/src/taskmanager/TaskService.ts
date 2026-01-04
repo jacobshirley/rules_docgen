@@ -1,6 +1,6 @@
-import { Task } from './Task';
-import { TaskPriority } from './TaskPriority';
-import { TaskStatus } from './TaskStatus';
+import { Task } from './Task'
+import { TaskPriority } from './TaskPriority'
+import { TaskStatus } from './TaskStatus'
 
 /**
  * Service interface for managing tasks.
@@ -46,7 +46,7 @@ export interface TaskService {
      * @returns The created task with its assigned ID and timestamps.
      * @throws {Error} If the task data is invalid.
      */
-    createTask(task: Task): Task;
+    createTask(task: Task): Task
 
     /**
      * Retrieves a task by its unique identifier.
@@ -54,7 +54,7 @@ export interface TaskService {
      * @param taskId - The unique identifier of the task. Must not be null or undefined.
      * @returns The task if found, or undefined if not found.
      */
-    getTaskById(taskId: string): Task | undefined;
+    getTaskById(taskId: string): Task | undefined
 
     /**
      * Updates an existing task.
@@ -67,7 +67,7 @@ export interface TaskService {
      * @returns The updated task.
      * @throws {Error} If the task ID is invalid or the task doesn't exist.
      */
-    updateTask(task: Task): Task;
+    updateTask(task: Task): Task
 
     /**
      * Updates the status of a task.
@@ -80,7 +80,7 @@ export interface TaskService {
      * @returns The updated task.
      * @throws {Error} If the task doesn't exist.
      */
-    updateTaskStatus(taskId: string, newStatus: TaskStatus): Task;
+    updateTaskStatus(taskId: string, newStatus: TaskStatus): Task
 
     /**
      * Updates the priority of a task.
@@ -92,7 +92,7 @@ export interface TaskService {
      * @returns The updated task.
      * @throws {Error} If the task doesn't exist.
      */
-    updateTaskPriority(taskId: string, newPriority: TaskPriority): Task;
+    updateTaskPriority(taskId: string, newPriority: TaskPriority): Task
 
     /**
      * Assigns a task to a user.
@@ -102,7 +102,7 @@ export interface TaskService {
      * @returns The updated task.
      * @throws {Error} If the task doesn't exist.
      */
-    assignTask(taskId: string, userId: string): Task;
+    assignTask(taskId: string, userId: string): Task
 
     /**
      * Unassigns a task from its current user.
@@ -111,7 +111,7 @@ export interface TaskService {
      * @returns The updated task.
      * @throws {Error} If the task doesn't exist.
      */
-    unassignTask(taskId: string): Task;
+    unassignTask(taskId: string): Task
 
     /**
      * Deletes a task by its unique identifier.
@@ -122,7 +122,7 @@ export interface TaskService {
      * @param taskId - The unique identifier of the task to delete. Must not be null or undefined.
      * @returns `true` if the task was deleted, `false` if it didn't exist.
      */
-    deleteTask(taskId: string): boolean;
+    deleteTask(taskId: string): boolean
 
     /**
      * Retrieves all tasks.
@@ -132,7 +132,7 @@ export interface TaskService {
      *
      * @returns A list of all tasks. Never null or undefined but may be empty.
      */
-    getAllTasks(): Task[];
+    getAllTasks(): Task[]
 
     /**
      * Retrieves tasks with pagination support.
@@ -142,7 +142,7 @@ export interface TaskService {
      * @returns A list of tasks for the specified page.
      * @throws {Error} If page is negative or pageSize is not positive.
      */
-    findTasks(page?: number, pageSize?: number): Task[];
+    findTasks(page?: number, pageSize?: number): Task[]
 
     /**
      * Finds tasks by their status.
@@ -150,7 +150,7 @@ export interface TaskService {
      * @param status - The status to filter by. Must not be null or undefined.
      * @returns A list of tasks with the specified status. Never null or undefined but may be empty.
      */
-    findTasksByStatus(status: TaskStatus): Task[];
+    findTasksByStatus(status: TaskStatus): Task[]
 
     /**
      * Finds tasks by their priority.
@@ -158,7 +158,7 @@ export interface TaskService {
      * @param priority - The priority to filter by. Must not be null or undefined.
      * @returns A list of tasks with the specified priority. Never null or undefined but may be empty.
      */
-    findTasksByPriority(priority: TaskPriority): Task[];
+    findTasksByPriority(priority: TaskPriority): Task[]
 
     /**
      * Finds tasks assigned to a specific user.
@@ -166,7 +166,7 @@ export interface TaskService {
      * @param userId - The unique identifier of the user. Must not be null or undefined.
      * @returns A list of tasks assigned to the user. Never null or undefined but may be empty.
      */
-    findTasksByAssignedUser(userId: string): Task[];
+    findTasksByAssignedUser(userId: string): Task[]
 
     /**
      * Finds tasks belonging to a specific project.
@@ -174,7 +174,7 @@ export interface TaskService {
      * @param projectId - The unique identifier of the project. Must not be null or undefined.
      * @returns A list of tasks in the project. Never null or undefined but may be empty.
      */
-    findTasksByProject(projectId: string): Task[];
+    findTasksByProject(projectId: string): Task[]
 
     /**
      * Finds tasks that are overdue.
@@ -184,14 +184,14 @@ export interface TaskService {
      *
      * @returns A list of overdue tasks. Never null or undefined but may be empty.
      */
-    findOverdueTasks(): Task[];
+    findOverdueTasks(): Task[]
 
     /**
      * Counts the total number of tasks.
      *
      * @returns The total number of tasks in the system.
      */
-    countTasks(): number;
+    countTasks(): number
 
     /**
      * Counts tasks by status.
@@ -199,6 +199,5 @@ export interface TaskService {
      * @param status - The status to count. Must not be null or undefined.
      * @returns The number of tasks with the specified status.
      */
-    countTasksByStatus(status: TaskStatus): number;
+    countTasksByStatus(status: TaskStatus): number
 }
-

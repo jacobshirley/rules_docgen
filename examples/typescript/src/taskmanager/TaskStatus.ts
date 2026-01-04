@@ -33,7 +33,7 @@ export enum TaskStatus {
      * This is the default status for newly created tasks. Tasks in this status
      * are waiting to be picked up and started.
      */
-    PENDING = "pending",
+    PENDING = 'pending',
 
     /**
      * Work on the task is currently underway.
@@ -41,7 +41,7 @@ export enum TaskStatus {
      * Tasks in this status are actively being worked on. This status indicates
      * that someone has started working on the task and progress is being made.
      */
-    IN_PROGRESS = "in-progress",
+    IN_PROGRESS = 'in-progress',
 
     /**
      * Task has been finished.
@@ -49,7 +49,7 @@ export enum TaskStatus {
      * Tasks in this status have been completed successfully. Completed tasks
      * are typically archived and no longer appear in active task lists.
      */
-    COMPLETED = "completed",
+    COMPLETED = 'completed',
 
     /**
      * Task has been cancelled and will not be completed.
@@ -58,6 +58,5 @@ export enum TaskStatus {
      * Cancelled tasks are not considered for completion and are typically excluded
      * from active work queues.
      */
-    CANCELLED = "cancelled",
+    CANCELLED = 'cancelled',
 }
-
