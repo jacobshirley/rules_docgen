@@ -2,6 +2,8 @@ module(name = "rules_docs_examples_typescript")
 
 bazel_dep(name = "aspect_rules_js", version = "2.8.1")
 bazel_dep(name = "aspect_rules_ts", version = "3.7.1")
+bazel_dep(name = "aspect_rules_lint", version = "2.0.0-beta.1")
+bazel_dep(name = "bazel_skylib", version = "1.8.2")
 bazel_dep(name = "rules_nodejs", version = "6.6.2")
 bazel_dep(name = "rules_docs")
 local_path_override(
@@ -31,3 +33,14 @@ rules_ts_ext = use_extension(
 )
 rules_ts_ext.deps()
 use_repo(rules_ts_ext, "npm_typescript")
+
+lint_tools = use_extension("@aspect_rules_lint//lint:extensions.bzl", "tools")
+lint_tools.vale()
+use_repo(
+    lint_tools,
+    "vale_Linux_64-bit",
+    "vale_Linux_arm64",
+    "vale_Windows_64-bit",
+    "vale_macOS_64-bit",
+    "vale_macOS_arm64",
+)
