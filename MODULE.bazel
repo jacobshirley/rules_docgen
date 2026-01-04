@@ -20,11 +20,11 @@ bazel_dep(name = "stardoc", version = "0.8.0", dev_dependency = True)
 
 pip = use_extension("@rules_python//python/extensions:pip.bzl", "pip")
 pip.parse(
-    hub_name = "default_pypi",
+    hub_name = "rules_docs__default_pypi",
     python_version = "3.11",
     requirements_lock = "//:requirements.txt",
 )
-use_repo(pip, "default_pypi")
+use_repo(pip, "rules_docs__default_pypi")
 
 docgen = use_extension("//docgen:extensions.bzl", "docgen")
 docgen.mkdocs(

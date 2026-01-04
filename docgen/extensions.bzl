@@ -9,7 +9,7 @@ docgen_mkdocs = tag_class(attrs = {
         mandatory = False,
         default = "mkdocs",
     ),
-    "pypi_hub": attr.label(doc = "Name of the pip repository hub that contains mkdocs", mandatory = False, default = "@default_pypi"),
+    "pypi_hub": attr.label(doc = "Name of the pip repository hub that contains mkdocs", mandatory = False, default = "@rules_docs__default_pypi"),
     "plugins": attr.string_list(doc = "List of mkdocs plugins to install", mandatory = False, default = []),
 })
 
