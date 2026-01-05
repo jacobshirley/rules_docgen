@@ -9,6 +9,7 @@ Bazel rules for managing documentation and static site generation.
 -   **Bazel targets**: Manage your documentation as Bazel targets
 -   **MkDocs**: Manage MkDocs (and plugins) using `rules_python` and generate static sites
 -   **Git integration**: Add last updated timestamps from git history
+-   **Linting**: Tested with https://vale.sh/ for linting prose, using rules_lint
 
 ## Installation
 
@@ -48,6 +49,9 @@ use_repo(docgen, "mkdocs")
 ```
 
 See [requirements.txt](requirements.txt) for an example requirements file.
+
+To install linting support, see the rules_lint documentation for running Vale over the targets created by rules_docs:
+https://registry.bazel.build/docs/aspect_rules_lint#lint-vale-bzl
 
 ### Using WORKSPACE
 
@@ -257,6 +261,10 @@ See the complete working example in [e2e/smoke/](e2e/smoke/README.md) directory,
 -   Navigation with external links and nested sections
 -   MkDocs configuration with Material theme
 -   Development server setup
+
+Also see language- or framework-specific examples in the examples/ folder.
+
+The examples/typescript folder also demonstrates how Vale can be setup to lint markdown prose.
 
 ## Advanced Features
 

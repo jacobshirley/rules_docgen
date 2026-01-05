@@ -19,6 +19,12 @@ bazel_dep(name = "buildifier_prebuilt", version = "8.2.1", dev_dependency = True
 bazel_dep(name = "stardoc", version = "0.8.0", dev_dependency = True)
 bazel_dep(name = "bazel_env.bzl", version = "0.5.0", dev_dependency = True)
 bazel_dep(name = "rules_multitool", version = "1.11.1", dev_dependency = True)
+single_version_override(
+    module_name = "rules_multitool",
+    patch_strip = 1,
+    patches = ["//tools:rules_multitool.pr115.patch"],
+    version = "1.11.1",
+)
 
 pip = use_extension("@rules_python//python/extensions:pip.bzl", "pip")
 pip.parse(

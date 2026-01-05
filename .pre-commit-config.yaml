@@ -27,6 +27,7 @@ repos:
       - id: end-of-file-fixer
         exclude: 'golden-'
       - id: trailing-whitespace
+        exclude: '.*\.patch$'
   # Check formatting and lint for starlark code
   - repo: https://github.com/keith/pre-commit-buildifier
     rev: 8.2.1

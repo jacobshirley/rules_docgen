@@ -2,7 +2,14 @@ load("@npm//:defs.bzl", "npm_link_all_packages")
 load("@npm//:typedoc/package_json.bzl", "bin")
 load("@rules_docs//docgen:defs.bzl", "docs", "docs_link", "markdown")
 
+exports_files([".vale.ini"])
+
 npm_link_all_packages(name = "node_modules")
+
+markdown(
+    name = "README",
+    file = "README.md",
+)
 
 markdown(
     name = "api_md",

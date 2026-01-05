@@ -24,33 +24,5 @@
                 "cpu": "arm64"
             }
         ]
-    },
-    "multitool": {
-        "binaries": [
-            {
-                "kind": "archive",
-                "url": "https://github.com/theoremlp/multitool/releases/download/v0.8.0/multitool-aarch64-unknown-linux-gnu.tar.xz",
-                "file": "multitool-aarch64-unknown-linux-gnu/multitool",
-                "sha256": "e249591e31fd3f7f27782d3b3da1ce077f9432fdfc7e163bac2b7cf43c3f87a0",
-                "os": "linux",
-                "cpu": "arm64"
-            },
-            {
-                "kind": "archive",
-                "url": "https://github.com/theoremlp/multitool/releases/download/v0.8.0/multitool-x86_64-unknown-linux-gnu.tar.xz",
-                "file": "multitool-x86_64-unknown-linux-gnu/multitool",
-                "sha256": "fc7e5e78f8efa6173cb82659f48ef0acd6ae6f0b906781ab9d4b058f774f657c",
-                "os": "linux",
-                "cpu": "x86_64"
-            },
-            {
-                "kind": "archive",
-                "url": "https://github.com/theoremlp/multitool/releases/download/v0.8.0/multitool-aarch64-apple-darwin.tar.xz",
-                "file": "multitool-aarch64-apple-darwin/multitool",
-                "sha256": "3187c94895358820c656c6a1736d442b3a568a5b1dd17c4c35f3903a07b709a2",
-                "os": "macos",
-                "cpu": "arm64"
-            }
-        ]
     }
 }
