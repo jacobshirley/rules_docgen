@@ -262,6 +262,10 @@ See the complete working example in [e2e/smoke/](e2e/smoke/README.md) directory,
 -   MkDocs configuration with Material theme
 -   Development server setup
 
+Also see language- or framework-specific examples in the examples/ folder.
+
+The examples/typescript folder also demonstrates how Vale can be setup to lint markdown prose.
+
 ## Advanced Features
 
 ### Git Last Updated Timestamps
