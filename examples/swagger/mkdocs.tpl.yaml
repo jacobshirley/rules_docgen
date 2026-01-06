@@ -1,0 +1,6 @@
+site_name: Swagger Example
+repo_url: https://github.com/jacobshirley/rules_docs/tree/main/examples/swagger
+docs_dir: docs
+site_dir: site
+plugins:
+    - redoc-tag

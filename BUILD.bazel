@@ -65,11 +65,13 @@ docs_index(
     srcs = [
         "@rules_docs_e2e_git_last_updated//:docs",
         "@rules_docs_e2e_smoke//:docs",
+        "@rules_docs_examples_swagger//:docs",
         "@rules_docs_examples_typescript//:index",
     ],
     nav = {
         "@rules_docs_e2e_smoke//:docs": "e2e/smoke",
         "@rules_docs_e2e_git_last_updated//:docs": "e2e/git_last_updated",
+        "@rules_docs_examples_swagger//:docs": "examples/swagger",
         "@rules_docs_examples_typescript//:index": "examples/typescript",
     },
     title = "examples",
