@@ -83,7 +83,7 @@ def docs_action_impl(ctx):
             if (_entrypoint):
                 entrypoint = _entrypoint
         elif (DocsLinkInfo in key):
-            is_external = True
+            is_external = key[DocsLinkInfo].url != ""
             title = value if value and value != "" else key[DocsLinkInfo].title
             entrypoint = key[DocsLinkInfo].url if key[DocsLinkInfo].url != "" else key[DocsLinkInfo].entrypoint if key[DocsLinkInfo].entrypoint != "" else key.label.name
         else:

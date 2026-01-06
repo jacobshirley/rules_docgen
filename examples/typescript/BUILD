@@ -8,10 +8,6 @@ markdown(
     name = "api_md",
     output = "API.md",
     readme_content = "# TypeScript with typedoc",
-    readme_header_links = {
-        # Pass the docs_link as a key to correctly link to the entrypoint
-        ":typedoc_link": "API Reference",
-    },
     title = "API Reference",
 )
 
@@ -27,31 +23,21 @@ bin.typedoc(
     ] + glob(["src/**/*.ts"]),
     args = [
         "--out",
-        # Need to workaround the issue of when this is called from a different repo
-        "_docs",
+        "API",
         "--readme",
         "API.md",
     ],
     # TODO: this should work without this repo_name() workaround when https://github.com/aspect-build/rules_js/pull/2344 is released
     chdir = "external/{}".format(repo_name()) if repo_name() != "" else package_name(),
-    out_dirs = ["_docs"],
+    out_dirs = ["API"],
 )
 
 # Wrap the typedoc output in a docs_link to be used in the docs target
 # This provides an entrypoint
 docs_link(
-    name = "typedoc_link",
-    entrypoint = "_docs/index.html",
-)
-
-docs(
     name = "api_docs",
-    # Depend on typedoc here instead of in docs_link to avoid circular dependencies
-    srcs = [
-        ":typedoc",
-        ":typedoc_link",
-    ],
-    entrypoint = ":api_md",
+    data = [":typedoc"],
+    entrypoint = "API/index.html",
 )
 
 docs(
